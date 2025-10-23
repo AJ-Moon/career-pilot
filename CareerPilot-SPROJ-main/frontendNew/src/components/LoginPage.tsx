@@ -50,6 +50,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ email: form.email, password: form.password }),
       });
 
@@ -74,6 +75,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       const res = await fetch(`${BACKEND_URL}/api/auth/verify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ email: form.email, code: verifyCode }),
       });
 
@@ -109,6 +111,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       const res = await fetch(`${BACKEND_URL}/api/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(form),
       });
 
