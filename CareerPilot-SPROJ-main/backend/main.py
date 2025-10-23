@@ -26,6 +26,10 @@ async def test_db():
 app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 app.include_router(resume.router, prefix="/api/resume", tags=["Resume"])
 
+@app.options("/{full_path:path}")
+async def preflight(full_path: str):
+    return {}
+
 @app.get("/")
 def root():
     return {"message": "CareerPilot FastAPI backend running!"}
