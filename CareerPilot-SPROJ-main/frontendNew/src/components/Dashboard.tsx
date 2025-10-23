@@ -71,8 +71,8 @@ export default function Dashboard({ onStartInterview, selectedDomain, setSelecte
     formData.append("file", file);
 
     try {
-      // const res = await fetch('${BACKEND_URL}/api/resume/upload', { method: "POST", body: formData });
-      const res = await fetch('${BACKEND_URL}/api/resume/upload', {
+      // const res = await fetch(`${BACKEND_URL}/api/resume/upload`, { method: "POST", body: formData });
+      const res = await fetch(`${BACKEND_URL}/api/resume/upload`, {
   method: "POST",
   headers: {
     Authorization: `Bearer ${localStorage.getItem("token")}`,  
@@ -99,7 +99,7 @@ if (!res.ok) {
     try {
       const token = localStorage.getItem("token"); // wherever you're storing it
   
-      const res = await fetch('${BACKEND_URL}/api/resume/update', {
+      const res = await fetch(`${BACKEND_URL}/api/resume/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
