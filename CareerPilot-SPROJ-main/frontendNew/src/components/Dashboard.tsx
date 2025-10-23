@@ -77,6 +77,7 @@ export default function Dashboard({ onStartInterview, selectedDomain, setSelecte
   headers: {
     Authorization: `Bearer ${localStorage.getItem("token")}`,  
   },
+        credentials: "include",
   body: formData,
 });
 if (!res.ok) {
@@ -105,6 +106,7 @@ if (!res.ok) {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, // ✅ auth now required
         },
+        credentials: "include",
         body: JSON.stringify({
           parsed_data: parsedData.parsed_data, // ✅ send only parsed data
         }),
