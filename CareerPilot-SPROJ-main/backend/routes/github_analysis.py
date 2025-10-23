@@ -66,7 +66,12 @@ def build_github_summary(url: str) -> Dict[str, Any]:
     if not username:
         return {"error": "Invalid GitHub URL"}
 
-    profile = fetch_github_profile(username)
+  
+    try:
+        profile = fetch_github_profile(username)
+    except requests.exceptions.HTTPError as e:
+        profile = {}
+        print("GitHub fetch failed:", e)
     repos = fetch_github_repos(username)
 
     return {
