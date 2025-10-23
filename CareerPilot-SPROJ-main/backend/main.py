@@ -29,3 +29,11 @@ app.include_router(resume.router, prefix="/api/resume", tags=["Resume"])
 @app.get("/")
 def root():
     return {"message": "CareerPilot FastAPI backend running!"}
+
+
+
+if __name__ == "__main__":
+    import uvicorn, os
+    port = int(os.environ.get("PORT", 5005))  
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
+    
