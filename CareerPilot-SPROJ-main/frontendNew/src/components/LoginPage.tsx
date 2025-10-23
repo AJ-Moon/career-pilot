@@ -21,7 +21,7 @@ interface LoginPageProps {
 }
 
 
-
+const BACKEND_URL = "https://career-pilot-s24d.onrender.com";
 
 export default function LoginPage({ onLogin }: LoginPageProps) {
   const [isVerifying, setIsVerifying] = useState(false);
@@ -47,7 +47,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         throw new Error("Please fill in all required fields.");
       }
 
-      const res = await fetch("http://localhost:5005/api/auth/login", {
+      const res = await fetch('${BACKEND_URL}/api/auth/login', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: form.email, password: form.password }),
@@ -71,7 +71,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5005/api/auth/verify", {
+      const res = await fetch('${BACKEND_URL}/api/auth/verify', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: form.email, code: verifyCode }),
@@ -106,7 +106,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         throw new Error("All fields are required.");
       }
 
-      const res = await fetch("http://localhost:5005/api/auth/signup", {
+      const res = await fetch('${BACKEND_URL}/api/auth/signup', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
