@@ -15,7 +15,6 @@ import {
   BarChart3, 
   GraduationCap,
   Upload,
-  Calendar,
   TrendingUp
 } from 'lucide-react';
 
