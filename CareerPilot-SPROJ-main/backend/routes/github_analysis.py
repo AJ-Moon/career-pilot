@@ -4,8 +4,9 @@ import requests
 from typing import Dict, Any, List
 
 GITHUB_API_URL = "https://api.github.com"
-HEADERS = {"Authorization": f"token {GITHUB_TOKEN}"} if GITHUB_TOKEN else {}
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
+HEADERS = {"Authorization": f"token {GITHUB_TOKEN}"} if GITHUB_TOKEN else {}
+
 def extract_github_username(url: str) -> str:
     """
     Extract username from github.com URL
