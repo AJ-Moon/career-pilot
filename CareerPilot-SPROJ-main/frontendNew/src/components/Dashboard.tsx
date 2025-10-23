@@ -44,7 +44,7 @@ const upcomingInterviews = [
   { company: 'TechCorp', date: 'Tomorrow, 2:00 PM', domain: 'Software Engineering' },
   { company: 'DataFlow Inc', date: 'Friday, 10:00 AM', domain: 'Data Science' },
 ];
-
+const BACKEND_URL = "https://career-pilot-s24d.onrender.com";
 export default function Dashboard({ onStartInterview, selectedDomain, setSelectedDomain }: DashboardProps) {
   const [autoDetectDomain, setAutoDetectDomain] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -71,8 +71,8 @@ export default function Dashboard({ onStartInterview, selectedDomain, setSelecte
     formData.append("file", file);
 
     try {
-      // const res = await fetch("http://127.0.0.1:5005/api/resume/upload", { method: "POST", body: formData });
-      const res = await fetch("http://127.0.0.1:5005/api/resume/upload", {
+      // const res = await fetch('${BACKEND_URL}/api/resume/upload', { method: "POST", body: formData });
+      const res = await fetch('${BACKEND_URL}/api/resume/upload', {
   method: "POST",
   headers: {
     Authorization: `Bearer ${localStorage.getItem("token")}`,  
@@ -99,7 +99,7 @@ if (!res.ok) {
     try {
       const token = localStorage.getItem("token"); // wherever you're storing it
   
-      const res = await fetch("http://127.0.0.1:5005/api/resume/update", {
+      const res = await fetch('${BACKEND_URL}/api/resume/update', {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
