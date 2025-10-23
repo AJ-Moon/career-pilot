@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routes import auth
 from config import db 
 from routes import resume
+from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
@@ -34,6 +35,11 @@ async def preflight(full_path: str):
 def root():
     return {"message": "CareerPilot FastAPI backend running!"}
 
+@app.middleware("http")
+async def debug_cors(request, call_next):
+    response = await call_next(request)
+    print("CORS headers:", response.headers.get("access-control-allow-origin"))
+    return response
 
 
 if __name__ == "__main__":
