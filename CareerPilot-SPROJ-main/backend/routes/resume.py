@@ -127,7 +127,7 @@ async def upload_resume(
     github_summary = None
     if parsed_data["github"]:
         github_summary = build_github_summary(parsed_data["github"][0])
-
+    print(github_summary)
     resume_doc = {
         "user_id": user_id,
         "filename": file.filename,
