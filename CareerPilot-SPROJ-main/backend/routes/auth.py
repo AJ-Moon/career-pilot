@@ -98,9 +98,9 @@ async def signup(user: UserSignup):
     }
     # return {"msg": "Verification code sent to email"}
 
-@router.post("/verify")
-async def verify(data: VerifyCode):
-     print(f"Skipping email: {email} / code: {code}")
+# @router.post("/verify")
+# async def verify(data: VerifyCode):
+#      print(f"Skipping email: {email} / code: {code}")
 #     if data.email not in pending_users:
 #         raise HTTPException(status_code=400, detail="No pending signup found")
 
