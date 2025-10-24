@@ -381,7 +381,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                       {loading ? "Creating..." : "Create Your Account"}
                     </Button>
                   </form>
-                  /* {isVerifying && (
+                   {/* {isVerifying && (
                     <form onSubmit={handleVerify} className="space-y-4 mt-6">
                       <p className="text-gray-600 text-sm">
                         Enter the 6-digit code sent to{" "}
@@ -401,8 +401,8 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                       >
                         {loading ? "Verifying..." : "Verify & Create Account"}
                       </Button>
-                    </form> */
-                  )}
+                    </form> 
+                  )}*/}
                 </TabsContent>
               </Tabs>
             </CardContent>
