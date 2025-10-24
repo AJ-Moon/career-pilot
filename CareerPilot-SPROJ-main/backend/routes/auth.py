@@ -68,19 +68,35 @@ async def signup(user: UserSignup):
     if existing:
         raise HTTPException(status_code=400, detail="Email already exists")
 
-    code = str(random.randint(100000, 999999))
+    # code = str(random.randint(100000, 999999))
 
+    # hashed_pw = pwd_context.hash(user.password)
+    # pending_users[user.email] = {
+    #     "name": user.name,
+    #     "email": user.email,
+    #     "password": hashed_pw,
+    #     "code": code,
+    #     "expires": datetime.utcnow() + timedelta(minutes=10),
+    # }
     hashed_pw = pwd_context.hash(user.password)
-    pending_users[user.email] = {
+
+    # Insert user directly into DB
+    new_user = {
         "name": user.name,
         "email": user.email,
         "password": hashed_pw,
-        "code": code,
-        "expires": datetime.utcnow() + timedelta(minutes=10),
     }
+    await users.insert_one(new_user)
 
-    await send_verification_email(user.email, code)
-    return {"msg": "Verification code sent to email"}
+
+    # await send_verification_email(user.email, code)
+    token = create_token({"sub": new_user["email"]})
+    return {
+        "msg": "Signup successful ✅",
+        "user": {"name": new_user["name"], "email": new_user["email"]},
+        "token": token
+    }
+    # return {"msg": "Verification code sent to email"}
 
 @router.post("/verify")
 async def verify(data: VerifyCode):
