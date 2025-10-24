@@ -84,30 +84,31 @@ async def signup(user: UserSignup):
 
 @router.post("/verify")
 async def verify(data: VerifyCode):
-    if data.email not in pending_users:
-        raise HTTPException(status_code=400, detail="No pending signup found")
+     print(f"Skipping email: {email} / code: {code}")
+#     if data.email not in pending_users:
+#         raise HTTPException(status_code=400, detail="No pending signup found")
 
-    record = pending_users[data.email]
+#     record = pending_users[data.email]
 
-    if datetime.utcnow() > record["expires"]:
-        del pending_users[data.email]
-        raise HTTPException(status_code=400, detail="Verification code expired")
+#     if datetime.utcnow() > record["expires"]:
+#         del pending_users[data.email]
+#         raise HTTPException(status_code=400, detail="Verification code expired")
 
-    if data.code != record["code"]:
-        raise HTTPException(status_code=400, detail="Invalid verification code")
+#     if data.code != record["code"]:
+#         raise HTTPException(status_code=400, detail="Invalid verification code")
 
-    new_user = {
-        "name": record["name"],
-        "email": record["email"],
-        "password": record["password"],
-    }
-    await users.insert_one(new_user)
-    del pending_users[data.email]
+#     new_user = {
+#         "name": record["name"],
+#         "email": record["email"],
+#         "password": record["password"],
+#     }
+#     await users.insert_one(new_user)
+#     del pending_users[data.email]
 
-    token = create_token({"sub": new_user["email"]})
-    return {
-       "msg": "Email verified successfully ✅",
-"user": {"name": new_user["name"], "email": new_user["email"]}, "token": token}
+#     token = create_token({"sub": new_user["email"]})
+#     return {
+#        "msg": "Email verified successfully ✅",
+# "user": {"name": new_user["name"], "email": new_user["email"]}, "token": token}
 
 
 
