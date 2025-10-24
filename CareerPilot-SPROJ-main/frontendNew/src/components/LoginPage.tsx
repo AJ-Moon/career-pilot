@@ -24,8 +24,8 @@ interface LoginPageProps {
 const BACKEND_URL = "https://career-pilot-s24d.onrender.com";
 
 export default function LoginPage({ onLogin }: LoginPageProps) {
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [verifyCode, setVerifyCode] = useState("");
+  // const [isVerifying, setIsVerifying] = useState(false);
+  // const [verifyCode, setVerifyCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
@@ -66,37 +66,37 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       setLoading(false);
     }
   };
-  const handleVerify = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+  // const handleVerify = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setError("");
+  //   setLoading(true);
 
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/auth/verify`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ email: form.email, code: verifyCode }),
-      });
+  //   try {
+  //     const res = await fetch(`${BACKEND_URL}/api/auth/verify`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       credentials: "include",
+  //       body: JSON.stringify({ email: form.email, code: verifyCode }),
+  //     });
 
-      const data = await res.json();
-      if (!res.ok)
-        throw new Error(data.detail || data.msg || "Verification failed.");
+  //     const data = await res.json();
+  //     if (!res.ok)
+  //       throw new Error(data.detail || data.msg || "Verification failed.");
 
-      // ✅ Success → log user in
-      localStorage.setItem("token", data.token);
+  //     // ✅ Success → log user in
+  //     localStorage.setItem("token", data.token);
 
-      onLogin({
-        name: data.user.name,
-        email: data.user.email,
-        token: data.token,
-      });
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     onLogin({
+  //       name: data.user.name,
+  //       email: data.user.email,
+  //       token: data.token,
+  //     });
+  //   } catch (err: any) {
+  //     setError(err.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,7 +128,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         throw new Error(data.msg || "Signup failed. Please try again.");
       }
 
-      setIsVerifying(true);
+      // setIsVerifying(true);
     } catch (err: any) {
       setError(err.message);
     } finally {
