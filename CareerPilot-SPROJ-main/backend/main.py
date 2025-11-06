@@ -3,7 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from routes import auth
 from config import db 
 from routes import resume
-from starlette.middleware.cors import CORSMiddleware
+from routes import user_data,practice
+from routes import candidates, dashboard,interview_webhook
+
 
 app = FastAPI()
 
@@ -23,27 +25,22 @@ async def test_db():
     except Exception as e:
         print("❌ MongoDB connection failed:", e)
 
-# Routes
+# === Candidate Routes ===
 app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 app.include_router(resume.router, prefix="/api/resume", tags=["Resume"])
+app.include_router(user_data.router, prefix="/api/users", tags=["User Data"])
+app.include_router(practice.router, prefix="/api/practice", tags=["Practice"])
 
-@app.options("/{full_path:path}")
-async def preflight(full_path: str):
-    return {}
+# === Recruiter Routes ===
+app.include_router(candidates.router, prefix="/api/recruiter/candidates", tags=["Recruiter - Candidates"])
+app.include_router(dashboard.router, prefix="/api/recruiter/dashboard", tags=["Recruiter - Dashboard"])
+app.include_router(interview_webhook.router, prefix="/api/webhooks", tags=["Webhooks"])
 
 @app.get("/")
 def root():
     return {"message": "CareerPilot FastAPI backend running!"}
 
-@app.middleware("http")
-async def debug_cors(request, call_next):
-    response = await call_next(request)
-    print("CORS headers:", response.headers.get("access-control-allow-origin"))
-    return response
-
-
 if __name__ == "__main__":
     import uvicorn, os
     port = int(os.environ.get("PORT", 5005))  
     uvicorn.run("main:app", host="0.0.0.0", port=port)
-    
