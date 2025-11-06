@@ -44,7 +44,7 @@ export default function App() {
   const urlParams = new URLSearchParams(window.location.search);
   const newUser = urlParams.get("newUser");
   const roleParam = urlParams.get("role");
-
+  const BACKEND_URL = "https://career-pilot-s24d.onrender.com";
   useEffect(() => {
     if (roleParam) setUserRole(roleParam);
   }, [roleParam]);
@@ -60,7 +60,7 @@ export default function App() {
 
       try {
         const existing = await axios.get(
-          `http://localhost:5005/api/users/${clerkId}`
+          `${BACKEND_URL}/api/users/${clerkId}`
         );
         console.log("🟢 User already exists:", existing.data);
       } catch (error: any) {
@@ -71,7 +71,7 @@ export default function App() {
             email,
             role: roleParam || "candidate",
           };
-          await axios.post("http://localhost:5005/api/users/create", payload);
+          await axios.post(`${BACKEND_URL}/api/users/create`, payload);
           console.log("✅ User created:", payload);
         }
       }
