@@ -4,6 +4,7 @@ uvicorn==0.36.0
 starlette==0.48.0
 python-dotenv==1.1.1
 openai==1.108.1
+clerk-backend-api
 
 # MongoDB
 motor==3.6.0
@@ -11,10 +12,9 @@ pymongo==4.9.2
 
 
 # Authentication & Security
-bcrypt==4.0.1
 passlib[bcrypt]==1.7.4
 python-jose[cryptography]==3.3.0
-
+bcrypt==4.2.1
 
 # Email
 fastapi-mail==1.4.1
@@ -48,3 +48,5 @@ tqdm==4.67.1
 # File Upload & PDF Parsing
 python-multipart==0.0.18
 PyPDF2==3.0.1
+pypdfium2==4.30.0
+aiofiles>=23.1.0
