@@ -30,7 +30,7 @@ interface DashboardProps {
   selectedDomain: string;
   setSelectedDomain: (domain: string) => void;
 }
-
+const BACKEND_URL = "https://career-pilot-s24d.onrender.com";
 const domains = [
   {
     id: "software",
@@ -119,7 +119,7 @@ export default function Dashboard({
           return;
         }
 
-        const res = await fetch("http://127.0.0.1:5005/api/resume/get", {
+        const res = await fetch(`${BACKEND_URL}/api/resume/get`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -160,7 +160,7 @@ export default function Dashboard({
       // 🔑 Get Clerk JWT
       const token = await getToken();
       console.log("Clerk token:", await getToken());
-      const res = await fetch("http://127.0.0.1:5005/api/resume/upload", {
+      const res = await fetch(`${BACKEND_URL}/api/resume/upload`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`, // ✅ Use Clerk token
@@ -188,7 +188,7 @@ export default function Dashboard({
   const handleSave = async () => {
     try {
       const token = await getToken();
-      const res = await fetch("http://127.0.0.1:5005/api/resume/update", {
+      const res = await fetch(`${BACKEND_URL}/api/resume/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
