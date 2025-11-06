@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:5005';
+const BASE_URL = 'https://career-pilot-s24d.onrender.com';
 
 export async function apiFetch(endpoint: string, options: RequestInit = {}) {
   const res = await fetch(`${BASE_URL}${endpoint}`, {
@@ -15,3 +15,4 @@ export async function apiFetch(endpoint: string, options: RequestInit = {}) {
 
   return await res.json();
 }
+
