@@ -1,156 +1,45 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { SignIn, SignUp } from "@clerk/clerk-react";
 import {
-  Target,
-  Award,
-  Brain,
-  MessageSquare,
-  Sparkles,
-  Eye,
-  EyeOff,
-  // CheckCircle,
-} from "lucide-react";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Brain, MessageSquare, Target, Award } from "lucide-react";
 
 interface LoginPageProps {
-  onLogin: (user: { name: string; email: string; avatar?: string; token?: string }) => void;
+  onLogin: (user: {
+    name: string;
+    email: string;
+    avatar?: string;
+    token?: string;
+  }) => void;
 }
 
-
-const BACKEND_URL = "https://career-pilot-s24d.onrender.com";
-
 export default function LoginPage({ onLogin }: LoginPageProps) {
-  // const [isVerifying, setIsVerifying] = useState(false);
-  // const [verifyCode, setVerifyCode] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-
-    setForm({ ...form, [e.target.id]: e.target.value });
-    if (error) setError("");
-  };
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    try {
-      if (!form.email || !form.password) {
-        throw new Error("Please fill in all required fields.");
-      }
-
-      const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ email: form.email, password: form.password }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.msg || "Login failed. Please try again.");
-      localStorage.setItem("token", data.token);
-
-
-      onLogin({ name: data.user.name, email: data.user.email, token: data.token });
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-  // const handleVerify = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setError("");
-  //   setLoading(true);
-
-  //   try {
-  //     const res = await fetch(`${BACKEND_URL}/api/auth/verify`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       credentials: "include",
-  //       body: JSON.stringify({ email: form.email, code: verifyCode }),
-  //     });
-
-  //     const data = await res.json();
-  //     if (!res.ok)
-  //       throw new Error(data.detail || data.msg || "Verification failed.");
-
-  //     // ✅ Success → log user in
-  //     localStorage.setItem("token", data.token);
-
-  //     onLogin({
-  //       name: data.user.name,
-  //       email: data.user.email,
-  //       token: data.token,
-  //     });
-  //   } catch (err: any) {
-  //     setError(err.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    try {
-      if (!form.name || !form.email || !form.password) {
-        throw new Error("All fields are required.");
-      }
-
-      const res = await fetch(`${BACKEND_URL}/api/auth/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(form),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        if (data.detail) {
-          if (Array.isArray(data.detail)) {
-            throw new Error(data.detail[0].msg);
-          }
-          if (typeof data.detail === "string") {
-            throw new Error(data.detail);
-          }
-        }
-        throw new Error(data.msg || "Signup failed. Please try again.");
-      }
-
-      // setIsVerifying(true);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [role, setRole] = useState<string | null>(null);
 
   const features = [
     {
       icon: Brain,
       title: "AI-Powered Preparation",
-      description: "Personalized interview questions tailored to your domain and experience level",
+      description:
+        "Personalized interview questions tailored to your domain and experience level",
     },
     {
       icon: MessageSquare,
       title: "Real-Time Feedback",
-      description: "Get instant analysis of your responses, body language, and confidence levels",
+      description:
+        "Get instant analysis of your responses, body language, and confidence levels",
     },
     {
       icon: Target,
       title: "Domain-Specific Training",
-      description: "Practice with questions from Software Engineering, Data Science, DevOps, and more",
+      description:
+        "Practice with questions from Software Engineering, Data Science, DevOps, and more",
     },
     {
       icon: Award,
@@ -163,7 +52,6 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
     <div className="min-h-screen flex bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50">
       {/* Left Side - Branding & Features */}
       <div className="flex-1 flex flex-col justify-center px-8 lg:px-16 bg-gradient-to-br from-violet-600 via-purple-600 to-pink-600 relative overflow-hidden">
-        {/* Background Blurs */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-20 w-72 h-72 bg-white rounded-full blur-3xl"></div>
           <div className="absolute bottom-20 right-20 w-96 h-96 bg-pink-300 rounded-full blur-3xl"></div>
@@ -171,7 +59,6 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         </div>
 
         <div className="relative z-10 max-w-xl">
-          {/* Logo */}
           <div className="flex items-center gap-3 mb-8">
             <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/20">
               <span className="text-white text-xl font-medium">CP</span>
@@ -179,7 +66,6 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
             <span className="text-2xl font-medium text-white">CareerPilot</span>
           </div>
 
-          {/* Tagline */}
           <div className="mb-12">
             <h1 className="text-5xl font-medium text-white mb-6 leading-tight">
               Ace Your Next
@@ -192,7 +78,6 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
             </p>
           </div>
 
-          {/* Feature List */}
           <div className="space-y-4 mb-12">
             {features.map((feature, index) => {
               const Icon = feature.icon;
@@ -216,47 +101,15 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
               );
             })}
           </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="text-3xl font-medium text-white mb-2">95%</div>
-              <div className="text-white/80 text-sm">Success Rate</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-medium text-white mb-2">50K+</div>
-              <div className="text-white/80 text-sm">Users Trained</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-medium text-white mb-2">1M+</div>
-              <div className="text-white/80 text-sm">Practice Sessions</div>
-            </div>
-          </div>
         </div>
       </div>
 
       {/* Right Side - Auth Form */}
       <div className="flex-1 flex items-center justify-center p-8 lg:p-16 max-w-2xl">
         <div className="w-full max-w-md">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-100 to-pink-100 rounded-full mb-6">
-              <Sparkles className="w-4 h-4 text-violet-600" />
-              <span className="text-sm font-medium text-violet-700">
-                AI-Powered Interview Prep
-              </span>
-            </div>
-            <h2 className="text-3xl font-medium text-gray-900 mb-2">
-              Get Started Today
-            </h2>
-            <p className="text-gray-600">
-              Join thousands of professionals who've mastered their interviews
-            </p>
-          </div>
-
           <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
             <CardHeader className="space-y-1 pb-4">
-              <CardTitle className="text-center">Welcome Back</CardTitle>
+              <CardTitle className="text-center">Welcome</CardTitle>
               <CardDescription className="text-center">
                 Sign in to your account or create a new one
               </CardDescription>
@@ -268,141 +121,59 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                   <TabsTrigger value="signup">Sign Up</TabsTrigger>
                 </TabsList>
 
-                {/* Sign In */}
+                {/* ✅ Sign In Tab */}
                 <TabsContent value="signin" className="space-y-4">
-                  <form onSubmit={handleLogin} className="space-y-4">
-                    {error && <p className="text-red-500 text-sm">{error}</p>}
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="Enter your email"
-                        value={form.email}
-                        onChange={handleChange}
-                        className="rounded-lg"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="signup-password">Password</Label>
-                      <div className="relative">
-                        <Input
-                          id="signup-password"
-                          type={showPassword ? "text" : "password"}
-                          placeholder="Create a password"
-                          value={form.password}
-                          onChange={(e) =>
-                            setForm({ ...form, password: e.target.value })
-                          }
-                          className="rounded-lg pr-10"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
-                        >
-                          {showPassword ? (
-                            <EyeOff size={18} />
-                          ) : (
-                            <Eye size={18} />
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                    <Button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full rounded-lg bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700"
-                    >
-                      {loading ? "Signing In..." : "Sign In to CareerPilot"}
-                    </Button>
-                  </form>
+                  <SignIn
+                    routing="hash"
+                    appearance={{
+                      elements: {
+                        formButtonPrimary:
+                          "bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700",
+                        footer: "hidden",
+                        footerAction: "hidden",
+                        cardFooter: "hidden",
+                      },
+                    }}
+                  />
                 </TabsContent>
 
-                {/* Sign Up */}
+                {/* ✅ Sign Up Tab */}
                 <TabsContent value="signup" className="space-y-4">
-                  <form onSubmit={handleSignup} className="space-y-4">
-                    {error && <p className="text-red-500 text-sm">{error}</p>}
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Full Name</Label>
-                      <Input
-                        id="name"
-                        type="text"
-                        placeholder="Enter your full name"
-                        value={form.name}
-                        onChange={handleChange}
-                        className="rounded-lg"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="signup-email">Email</Label>
-                      <Input
-                        id="signup-email"
-                        type="email"
-                        placeholder="Enter your email"
-                        value={form.email}
-                        onChange={(e) =>
-                          setForm({ ...form, email: e.target.value })
-                        }
-                        className="rounded-lg"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="signup-password">Password</Label>
-                      <div className="relative">
-                        <Input
-                          id="signup-password"
-                          type={showPassword ? "text" : "password"}
-                          placeholder="Create a password"
-                          value={form.password}
-                          onChange={(e) =>
-                            setForm({ ...form, password: e.target.value })
-                          }
-                          className="rounded-lg pr-10"
-                        />
+                  {!role ? (
+                    <div className="flex flex-col items-center space-y-4">
+                      <h3 className="text-lg font-semibold text-gray-700">
+                        Choose your role
+                      </h3>
+                      <div className="flex gap-4">
                         <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+                          onClick={() => setRole("candidate")}
+                          className="px-6 py-3 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition"
                         >
-                          {showPassword ? (
-                            <EyeOff size={18} />
-                          ) : (
-                            <Eye size={18} />
-                          )}
+                          Candidate
+                        </button>
+                        <button
+                          onClick={() => setRole("recruiter")}
+                          className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
+                        >
+                          Recruiter
                         </button>
                       </div>
                     </div>
-                    <Button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full rounded-lg bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700"
-                    >
-                      {loading ? "Creating..." : "Create Your Account"}
-                    </Button>
-                  </form>
-                   {/* {isVerifying && (
-                    <form onSubmit={handleVerify} className="space-y-4 mt-6">
-                      <p className="text-gray-600 text-sm">
-                        Enter the 6-digit code sent to{" "}
-                        <span className="font-medium">{form.email}</span>
-                      </p>
-                      <Input
-                        type="text"
-                        placeholder="Enter verification code"
-                        value={verifyCode}
-                        onChange={(e) => setVerifyCode(e.target.value)}
-                        className="rounded-lg"
-                      />
-                      <Button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
-                      >
-                        {loading ? "Verifying..." : "Verify & Create Account"}
-                      </Button>
-                    </form> 
-                  )}*/}
+                  ) : (
+                    <SignUp
+                      routing="hash"
+                      afterSignUpUrl={`/?newUser=true&role=${role}`}
+                      appearance={{
+                        elements: {
+                          formButtonPrimary:
+                            "bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700",
+                          footer: "hidden",
+                          footerAction: "hidden",
+                          cardFooter: "hidden",
+                        },
+                      }}
+                    />
+                  )}
                 </TabsContent>
               </Tabs>
             </CardContent>
