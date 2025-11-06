@@ -117,7 +117,7 @@ export default function PracticeLibrary() {
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
   const pageSize = 20;
-
+  const BACKEND_URL = "https://career-pilot-s24d.onrender.com";
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -157,7 +157,7 @@ export default function PracticeLibrary() {
       query.append("limit", pageSize.toString());
 
       const res = await fetch(
-        `http://localhost:5005/api/practice/software?${query.toString()}`
+        `${BACKEND_URL}/api/practice/software?${query.toString()}`
       );
       if (!res.ok) throw new Error("Failed to fetch questions");
 
@@ -358,7 +358,7 @@ export default function PracticeLibrary() {
                         try {
                           setLoading(true);
                           const res = await fetch(
-                            `http://localhost:5005/api/practice/datascience-flashcards?category=${encodeURIComponent(
+                            `${BACKEND_URL}/api/practice/datascience-flashcards?category=${encodeURIComponent(
                               category
                             )}`
                           );
