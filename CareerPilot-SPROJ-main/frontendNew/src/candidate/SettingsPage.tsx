@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import {
   User,
-  Globe,
-  Upload,
-  Eye,
-  Users,
+  // Globe,
+  // Upload,
+  // Eye,
+  // Users,
   Shield,
   Accessibility,
   Palette,
   Save,
-  Camera,
+  // Camera,
 } from "lucide-react";
 import {
   Card,
