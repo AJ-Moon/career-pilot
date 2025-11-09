@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, UserButton, type UserResource, useUser } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/clerk-react";
 import { useState, useEffect } from "react";
 import { Bell, ChevronDown } from "lucide-react";
 import { Button } from "./components/ui/button";
@@ -142,7 +142,7 @@ export default function App() {
       case "practice":
         return <PracticeLibrary />;
       case "settings":
-        return <SettingsPage user={user ?? null} />; // ✅ user optional
+        return <SettingsPage user={user ?? null} />; // ✅ user typed as typeof user | null
       default:
         return <Dashboard onStartInterview={() => setShowPreInterview(true)} selectedDomain={selectedDomain} setSelectedDomain={setSelectedDomain} />;
     }
