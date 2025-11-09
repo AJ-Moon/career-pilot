@@ -10,17 +10,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Brain, MessageSquare, Target, Award } from "lucide-react";
 
-interface LoginPageProps {
-  onLogin?: (user: {
-    name: string;
-    email: string;
-    avatar?: string;
-    token?: string;
-  }) => void;
-}
-
-export default function LoginPage({ onLogin }: LoginPageProps) {
-  const [role, setRole] = useState<string | null>(null);
+export default function LoginPage() {
+  const [role, setRole] = useState<"candidate" | "recruiter" | null>(null);
 
   const features = [
     {
@@ -90,9 +81,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                     <Icon className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-white font-medium mb-1">
-                      {feature.title}
-                    </h3>
+                    <h3 className="text-white font-medium mb-1">{feature.title}</h3>
                     <p className="text-white/80 text-sm">{feature.description}</p>
                   </div>
                 </div>
@@ -139,9 +128,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                 <TabsContent value="signup" className="space-y-4">
                   {!role ? (
                     <div className="flex flex-col items-center space-y-4">
-                      <h3 className="text-lg font-semibold text-gray-700">
-                        Choose your role
-                      </h3>
+                      <h3 className="text-lg font-semibold text-gray-700">Choose your role</h3>
                       <div className="flex gap-4">
                         <button
                           onClick={() => setRole("candidate")}
