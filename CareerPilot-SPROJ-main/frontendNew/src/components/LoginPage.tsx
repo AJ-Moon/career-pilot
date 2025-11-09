@@ -19,7 +19,7 @@ import { Brain, MessageSquare, Target, Award } from "lucide-react";
 //   }) => void;
 // }
 
-export default function LoginPage({ onLogin ), {
+export default function LoginPage({ onLogin }: { onLogin?: () => void }) {
   const [role, setRole] = useState<string | null>(null);
 
   const features = [
