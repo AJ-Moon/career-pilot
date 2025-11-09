@@ -1,15 +1,10 @@
 import React, { useState } from "react";
 import {
   User,
-  // Globe,
-  // Upload,
-  // Eye,
-  // Users,
   Shield,
   Accessibility,
   Palette,
   Save,
-  // Camera,
 } from "lucide-react";
 import {
   Card,
@@ -32,11 +27,16 @@ import {
 } from "../components/ui/select";
 import { Slider } from "../components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group";
+import { User as ClerkUser } from "@clerk/clerk-react";
 
-const SettingsPage: React.FC = () => {
+interface SettingsPageProps {
+  user: ClerkUser | null;
+}
+
+const SettingsPage: React.FC<SettingsPageProps> = ({ user }) => {
   const [settings, setSettings] = useState({
-    name: "",
-    email: "",
+    name: user?.fullName || "",
+    email: user?.primaryEmailAddress?.emailAddress || "",
     timeZone: "GMT",
     language: "english",
     fontSize: 14,
@@ -46,10 +46,10 @@ const SettingsPage: React.FC = () => {
     colorTheme: "blue",
   });
 
-  const handleSettingChange = (
-    key: keyof typeof settings,
-    value: unknown
-  ): void => {
+  const handleSettingChange = <K extends keyof typeof settings>(
+    key: K,
+    value: typeof settings[K]
+  ) => {
     setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -83,7 +83,7 @@ const SettingsPage: React.FC = () => {
                   <Input
                     id="name"
                     value={settings.name}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    onChange={(e) =>
                       handleSettingChange("name", e.target.value)
                     }
                   />
@@ -93,7 +93,7 @@ const SettingsPage: React.FC = () => {
                   <Input
                     id="email"
                     value={settings.email}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    onChange={(e) =>
                       handleSettingChange("email", e.target.value)
                     }
                   />
@@ -105,7 +105,7 @@ const SettingsPage: React.FC = () => {
                   <Label htmlFor="timezone">Time Zone</Label>
                   <Select
                     value={settings.timeZone}
-                    onValueChange={(value: string) =>
+                    onValueChange={(value) =>
                       handleSettingChange("timeZone", value)
                     }
                   >
@@ -125,7 +125,7 @@ const SettingsPage: React.FC = () => {
                   <Label>Language</Label>
                   <RadioGroup
                     defaultValue="english"
-                    onValueChange={(value: string) =>
+                    onValueChange={(value) =>
                       handleSettingChange("language", value)
                     }
                   >
@@ -163,7 +163,7 @@ const SettingsPage: React.FC = () => {
                   min={12}
                   max={24}
                   step={1}
-                  onValueChange={(value: number[]) =>
+                  onValueChange={(value) =>
                     handleSettingChange("fontSize", value[0])
                   }
                 />
@@ -191,7 +191,7 @@ const SettingsPage: React.FC = () => {
                 <Label>Enable Facial Scoring</Label>
                 <Switch
                   checked={settings.facialScoring}
-                  onCheckedChange={(checked: boolean) =>
+                  onCheckedChange={(checked) =>
                     handleSettingChange("facialScoring", checked)
                   }
                 />
@@ -200,7 +200,7 @@ const SettingsPage: React.FC = () => {
                 <Label>Anonymous Mode</Label>
                 <Switch
                   checked={settings.anonymity}
-                  onCheckedChange={(checked: boolean) =>
+                  onCheckedChange={(checked) =>
                     handleSettingChange("anonymity", checked)
                   }
                 />
@@ -223,7 +223,7 @@ const SettingsPage: React.FC = () => {
                 <Label>Dark Mode</Label>
                 <Switch
                   checked={settings.darkMode}
-                  onCheckedChange={(checked: boolean) =>
+                  onCheckedChange={(checked) =>
                     handleSettingChange("darkMode", checked)
                   }
                 />
@@ -233,7 +233,7 @@ const SettingsPage: React.FC = () => {
                 <Label>Color Theme</Label>
                 <Select
                   value={settings.colorTheme}
-                  onValueChange={(value: string) =>
+                  onValueChange={(value) =>
                     handleSettingChange("colorTheme", value)
                   }
                 >
