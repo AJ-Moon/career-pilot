@@ -1,5 +1,5 @@
-import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
-import React, { useState, useEffect } from "react";
+import { SignedIn, SignedOut, UserButton, type UserResource, useUser } from "@clerk/clerk-react";
+import { useState, useEffect } from "react";
 import { Bell, ChevronDown } from "lucide-react";
 import { Button } from "./components/ui/button";
 import {
@@ -9,10 +9,9 @@ import {
   DropdownMenuTrigger,
 } from "./components/ui/dropdown-menu";
 import { Badge } from "./components/ui/badge";
-import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
 
-// 🧠 Candidate imports
+// Candidate imports
 import Dashboard from "./candidate/Dashboard";
 import PreInterviewModal from "./candidate/PreInterviewModal";
 import InterviewSession from "./candidate/InterviewSession";
@@ -20,22 +19,12 @@ import FeedbackPage from "./candidate/FeedbackPage";
 import PracticeLibrary from "./candidate/PracticeLibrary";
 import SettingsPage from "./candidate/SettingsPage";
 
-// 🧠 Recruiter imports
+// Recruiter imports
 import RecruiterDashboard from "./recruiter/RecruiterDashboard";
 
 import LoginPage from "./components/LoginPage";
 
-type PageType =
-  | "dashboard"
-  | "pre-interview"
-  | "interview"
-  | "feedback"
-  | "practice"
-  | "settings";
-
-interface SomeComponentProps {
-  user: UserResource | null;
-}
+type PageType = "dashboard" | "pre-interview" | "interview" | "feedback" | "practice" | "settings";
 
 export default function App() {
   const { user } = useUser();
@@ -49,6 +38,7 @@ export default function App() {
   const newUser = urlParams.get("newUser");
   const roleParam = urlParams.get("role");
   const BACKEND_URL = "https://career-pilot-s24d.onrender.com";
+
   useEffect(() => {
     if (roleParam) setUserRole(roleParam);
   }, [roleParam]);
@@ -60,23 +50,16 @@ export default function App() {
       const clerkId = user.id;
       const email = user.primaryEmailAddress?.emailAddress;
 
-      console.log("🟣 Clerk user detected:", clerkId, email, "Role:", roleParam);
-
       try {
-        const existing = await axios.get(
-          `${BACKEND_URL}/api/users/${clerkId}`
-        );
-        console.log("🟢 User already exists:", existing.data);
+        await axios.get(`${BACKEND_URL}/api/users/${clerkId}`);
       } catch (error: any) {
-        if (error.response && error.response.status === 404) {
-          console.log("🟡 Creating new user...");
+        if (error.response?.status === 404) {
           const payload = {
             clerk_id: clerkId,
             email,
             role: roleParam || "candidate",
           };
           await axios.post(`${BACKEND_URL}/api/users/create`, payload);
-          console.log("✅ User created:", payload);
         }
       }
     };
@@ -84,12 +67,11 @@ export default function App() {
     if (newUser && user) syncUserWithBackend();
   }, [user, newUser, roleParam]);
 
-  // ✅ If recruiter, show recruiter dashboard only
   if (userRole === "recruiter") {
     return (
       <>
         <SignedOut>
-          <LoginPage onLogin={(user) => console.log("Recruiter logged in:", user)} />
+          <LoginPage />
         </SignedOut>
 
         <SignedIn>
@@ -99,7 +81,6 @@ export default function App() {
     );
   }
 
-  // ✅ Candidate flow
   const Navigation = () => (
     <nav className="bg-white border-b border-border px-6 py-4">
       <div className="flex items-center justify-between max-w-7xl mx-auto">
@@ -128,10 +109,7 @@ export default function App() {
                 "Design",
                 "Electrical/Mechanical",
               ].map((domain) => (
-                <DropdownMenuItem
-                  key={domain}
-                  onClick={() => setSelectedDomain(domain)}
-                >
+                <DropdownMenuItem key={domain} onClick={() => setSelectedDomain(domain)}>
                   {domain}
                 </DropdownMenuItem>
               ))}
@@ -140,36 +118,12 @@ export default function App() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setCurrentPage("dashboard")}
-            className={currentPage === "dashboard" ? "bg-accent" : ""}
-          >
-            Dashboard
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setCurrentPage("practice")}
-            className={currentPage === "practice" ? "bg-accent" : ""}
-          >
-            Practice
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setCurrentPage("settings")}
-            className={currentPage === "settings" ? "bg-accent" : ""}
-          >
-            Settings
-          </Button>
-
+          <Button variant="ghost" size="sm" onClick={() => setCurrentPage("dashboard")} className={currentPage === "dashboard" ? "bg-accent" : ""}>Dashboard</Button>
+          <Button variant="ghost" size="sm" onClick={() => setCurrentPage("practice")} className={currentPage === "practice" ? "bg-accent" : ""}>Practice</Button>
+          <Button variant="ghost" size="sm" onClick={() => setCurrentPage("settings")} className={currentPage === "settings" ? "bg-accent" : ""}>Settings</Button>
           <Button variant="ghost" size="icon" className="relative">
             <Bell className="w-4 h-4" />
-            <Badge className="absolute -top-1 -right-1 bg-destructive text-xs">
-              2
-            </Badge>
+            <Badge className="absolute -top-1 -right-1 bg-destructive text-xs">2</Badge>
           </Button>
           <UserButton afterSignOutUrl="/" />
         </div>
@@ -180,49 +134,24 @@ export default function App() {
   const renderPage = () => {
     switch (currentPage) {
       case "dashboard":
-        return (
-          <Dashboard
-            onStartInterview={() => setShowPreInterview(true)}
-            selectedDomain={selectedDomain}
-            setSelectedDomain={setSelectedDomain}
-          />
-        );
+        return <Dashboard onStartInterview={() => setShowPreInterview(true)} selectedDomain={selectedDomain} setSelectedDomain={setSelectedDomain} />;
       case "interview":
-        return (
-          <InterviewSession
-            onComplete={() => setCurrentPage("feedback")}
-            onEndInterview={() => setCurrentPage("feedback")}
-            onReturnHome={() => setCurrentPage("dashboard")}
-            domain={selectedDomain}
-          />
-        );
+        return <InterviewSession onComplete={() => setCurrentPage("feedback")} onEndInterview={() => setCurrentPage("feedback")} onReturnHome={() => setCurrentPage("dashboard")} domain={selectedDomain} />;
       case "feedback":
-        return (
-          <FeedbackPage
-            domain={selectedDomain}
-            onBackToDashboard={() => setCurrentPage("dashboard")}
-          />
-        );
+        return <FeedbackPage domain={selectedDomain} onBackToDashboard={() => setCurrentPage("dashboard")} />;
       case "practice":
         return <PracticeLibrary />;
       case "settings":
-        return <SettingsPage user={user} />;
+        return <SettingsPage user={user ?? null} />; // ✅ user optional
       default:
-      return (
-        <Dashboard
-          onStartInterview={() => setShowPreInterview(true)}
-          selectedDomain={selectedDomain}
-          setSelectedDomain={setSelectedDomain}
-        />
-      );
-    
+        return <Dashboard onStartInterview={() => setShowPreInterview(true)} selectedDomain={selectedDomain} setSelectedDomain={setSelectedDomain} />;
     }
   };
 
   return (
     <>
       <SignedOut>
-        <LoginPage onLogin={(user) => console.log("User logged in:", user)} />
+        <LoginPage />
       </SignedOut>
 
       <SignedIn>
@@ -230,12 +159,7 @@ export default function App() {
           <Navigation />
           <main>{renderPage()}</main>
           {showPreInterview && (
-            <PreInterviewModal
-              open={showPreInterview}
-              onClose={() => setShowPreInterview(false)}
-              onComplete={() => setCurrentPage("interview")}
-              selectedDomain={selectedDomain}
-            />
+            <PreInterviewModal open={showPreInterview} onClose={() => setShowPreInterview(false)} onComplete={() => setCurrentPage("interview")} selectedDomain={selectedDomain} />
           )}
         </div>
       </SignedIn>
