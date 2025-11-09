@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import { SignIn, SignUp } from "@clerk/clerk-react";
 import {
   Card,
@@ -10,16 +10,16 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Brain, MessageSquare, Target, Award } from "lucide-react";
 
-interface LoginPageProps {
-  onLogin: (user: {
-    name: string;
-    email: string;
-    avatar?: string;
-    token?: string;
-  }) => void;
-}
+// interface LoginPageProps {
+//   onLogin: (user: {
+//     name: string;
+//     email: string;
+//     avatar?: string;
+//     token?: string;
+//   }) => void;
+// }
 
-export default function LoginPage({ onLogin }: LoginPageProps) {
+export default function LoginPage({ onLogin ) {
   const [role, setRole] = useState<string | null>(null);
 
   const features = [
