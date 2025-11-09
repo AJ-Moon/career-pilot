@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { SignIn, SignUp } from "@clerk/clerk-react";
 import {
   Card,
@@ -11,13 +11,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Brain, MessageSquare, Target, Award } from "lucide-react";
 
 interface LoginPageProps {
-  onLogin: (user: {
+  onLogin?: (user: {
     name: string;
     email: string;
     avatar?: string;
     token?: string;
   }) => void;
 }
+
 export default function LoginPage({ onLogin }: LoginPageProps) {
   const [role, setRole] = useState<string | null>(null);
 
@@ -92,9 +93,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                     <h3 className="text-white font-medium mb-1">
                       {feature.title}
                     </h3>
-                    <p className="text-white/80 text-sm">
-                      {feature.description}
-                    </p>
+                    <p className="text-white/80 text-sm">{feature.description}</p>
                   </div>
                 </div>
               );
@@ -120,7 +119,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                   <TabsTrigger value="signup">Sign Up</TabsTrigger>
                 </TabsList>
 
-                {/* ✅ Sign In Tab */}
+                {/* Sign In Tab */}
                 <TabsContent value="signin" className="space-y-4">
                   <SignIn
                     routing="hash"
@@ -136,7 +135,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                   />
                 </TabsContent>
 
-                {/* ✅ Sign Up Tab */}
+                {/* Sign Up Tab */}
                 <TabsContent value="signup" className="space-y-4">
                   {!role ? (
                     <div className="flex flex-col items-center space-y-4">
