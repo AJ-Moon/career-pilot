@@ -17,21 +17,21 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/candidate/ui/card";
-import { Label } from "@/candidate/ui/label";
-import { Input } from "@/candidate/ui/input";
-import { Switch } from "@/candidate/ui/switch";
-import { Button } from "@/candidate/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/candidate/ui/tabs";
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/candidate/ui/select";
-import { Slider } from "@/candidate/ui/slider";
-import { RadioGroup, RadioGroupItem } from "@/candidate/ui/radio-group";
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const SettingsPage: React.FC = () => {
   const [settings, setSettings] = useState({
