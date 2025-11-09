@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  User,
-  Shield,
-  Accessibility,
-  Palette,
-  Save,
-} from "lucide-react";
+import { Shield, Accessibility, Palette, Save } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -27,7 +21,12 @@ import {
 } from "../components/ui/select";
 import { Slider } from "../components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group";
-import { User as ClerkUser } from "@clerk/clerk-react";
+
+// Use this type instead of importing User from Clerk
+interface ClerkUser {
+  fullName?: string;
+  primaryEmailAddress?: { emailAddress: string };
+}
 
 interface SettingsPageProps {
   user: ClerkUser | null;
@@ -72,7 +71,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ user }) => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <User className="w-5 h-5" /> General Settings
+                <span className="w-5 h-5 inline-block">👤</span> General Settings
               </CardTitle>
               <CardDescription>Manage your profile and preferences.</CardDescription>
             </CardHeader>
