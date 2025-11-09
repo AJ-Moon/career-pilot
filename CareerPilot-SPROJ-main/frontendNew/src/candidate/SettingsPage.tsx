@@ -22,20 +22,10 @@ import {
 import { Slider } from "../components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group";
 
-// Use this type instead of importing User from Clerk
-interface ClerkUser {
-  fullName?: string;
-  primaryEmailAddress?: { emailAddress: string };
-}
-
-interface SettingsPageProps {
-  user: ClerkUser | null;
-}
-
-const SettingsPage: React.FC<SettingsPageProps> = ({ user }) => {
+const SettingsPage: React.FC = () => {
   const [settings, setSettings] = useState({
-    name: user?.fullName || "",
-    email: user?.primaryEmailAddress?.emailAddress || "",
+    name: "",
+    email: "",
     timeZone: "GMT",
     language: "english",
     fontSize: 14,
