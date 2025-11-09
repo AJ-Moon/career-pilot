@@ -14,9 +14,9 @@ interface UploadedFile {
   candidateId?: string;
 }
 
-interface Props {
-  onActionComplete?: () => void;
-}
+// interface Props {
+//   onActionComplete?: () => void;
+// }
 
 export default function CandidateUpload({ onUploadComplete }: { onUploadComplete?: () => void }) {
   const [files, setFiles] = useState<UploadedFile[]>([]);
