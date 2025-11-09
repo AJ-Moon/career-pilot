@@ -1,5 +1,5 @@
 import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
-// import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Bell, ChevronDown } from "lucide-react";
 import { Button } from "./components/ui/button";
 import {
@@ -32,6 +32,10 @@ type PageType =
   | "feedback"
   | "practice"
   | "settings";
+
+interface SomeComponentProps {
+  user: UserResource | null;
+}
 
 export default function App() {
   const { user } = useUser();
