@@ -1,5 +1,5 @@
 import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
-import React, { useState, useEffect } from "react";
+// import React, { useState, useEffect } from "react";
 import { Bell, ChevronDown } from "lucide-react";
 import { Button } from "./components/ui/button";
 import {
@@ -203,7 +203,7 @@ export default function App() {
         return <PracticeLibrary />;
       case "settings":
         return <SettingsPage user={user} />;
-      ddefault:
+      default:
       return (
         <Dashboard
           onStartInterview={() => setShowPreInterview(true)}
