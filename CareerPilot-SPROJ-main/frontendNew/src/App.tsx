@@ -32,7 +32,6 @@ export default function App() {
 
   // detect role from signup redirect params
   const urlParams = new URLSearchParams(window.location.search);
-  const _newUser = urlParams.get("newUser");
   const roleParam = urlParams.get("role");
 
   // sync with backend
@@ -45,7 +44,7 @@ export default function App() {
 
       try {
         // check if user exists in backend (authorized)
-        const _res = await api.get(`/users/${clerkId}`);
+        const res = await api.get(`/users/${clerkId}`);
         setUserRole(res.data.role);
       } catch (err: any) {
         if (err.response?.status === 404) {
