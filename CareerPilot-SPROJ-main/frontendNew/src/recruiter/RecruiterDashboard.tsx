@@ -20,14 +20,16 @@ export default function RecruiterDashboard() {
   const [activity, setActivity] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const clerk = useClerk();
 
   const onLogout = async () => {
     try {
-      await clerk.signOut(); // Properly logs out from Clerk
+      await clerk.signOut(); // ✅ Proper Clerk logout
     } catch (err) {
       console.error("Failed to logout:", err);
     }
   };
+
 
   // ✅ Updated API URLs
   const refreshDashboard = useCallback(async () => {
