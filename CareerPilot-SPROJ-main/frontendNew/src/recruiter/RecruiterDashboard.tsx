@@ -16,11 +16,13 @@ export default function RecruiterDashboard() {
     completed_interviews: 0,
     pending_interviews: 0,
     average_score: 0,
+    const { user } = useUser();
+    const clerk = useClerk();
   });
   const [activity, setActivity] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
-  const clerk = useClerk();
+ 
 
   const onLogout = async () => {
     try {
