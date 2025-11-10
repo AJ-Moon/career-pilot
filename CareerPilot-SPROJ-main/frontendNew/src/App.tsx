@@ -45,32 +45,39 @@ export default function App() {
   const BACKEND_URL = "https://career-pilot-s24d.onrender.com";
 
   useEffect(() => {
-    if (roleParam) setUserRole(roleParam);
-  }, [roleParam]);
+  if (roleParam) setUserRole(roleParam);
+}, [roleParam]);
 
-  useEffect(() => {
-    const syncUserWithBackend = async () => {
-      if (!user) return;
-
-      const clerkId = user.id;
-      const email = user.primaryEmailAddress?.emailAddress;
-
-      try {
-        await axios.get(`${BACKEND_URL}/api/users/${clerkId}`);
-      } catch (error: any) {
-        if (error.response && error.response.status === 404) {
-          const payload = {
-            clerk_id: clerkId,
-            email,
-            role: roleParam || "candidate",
-          };
-          await axios.post(`${BACKEND_URL}/api/users/create`, payload);
-        }
-      }
-    };
-    useEffect(() => {
-  const fetchUserRole = async () => {
+useEffect(() => {
+  const syncUserWithBackend = async () => {
     if (!user) return;
+
+    const clerkId = user.id;
+    const email = user.primaryEmailAddress?.emailAddress;
+
+    try {
+      await axios.get(`${BACKEND_URL}/api/users/${clerkId}`);
+    } catch (error: any) {
+      if (error.response && error.response.status === 404) {
+        const payload = {
+          clerk_id: clerkId,
+          email,
+          role: roleParam || "candidate",
+        };
+        await axios.post(`${BACKEND_URL}/api/users/create`, payload);
+        setUserRole(payload.role);
+      }
+    }
+  };
+
+  // ✅ Only run for new signups
+  if (newUser && user) syncUserWithBackend();
+}, [user, newUser, roleParam]);
+
+// ✅ NEW EFFECT — runs for existing users (login)
+useEffect(() => {
+  const fetchExistingUserRole = async () => {
+    if (!user || newUser) return; // skip if new signup
 
     try {
       const res = await axios.get(`${BACKEND_URL}/api/users/${user.id}`);
@@ -78,9 +85,13 @@ export default function App() {
         setUserRole(res.data.role);
       }
     } catch (err) {
-      console.error("Error fetching user role:", err);
+      console.error("Failed to fetch role:", err);
+      setUserRole("candidate"); // fallback to candidate
     }
   };
+
+  fetchExistingUserRole();
+}, [user]);
 
   // only run if user is logged in and not a new signup
   if (user && !newUser) {
