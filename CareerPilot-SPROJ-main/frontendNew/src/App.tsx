@@ -50,7 +50,7 @@ export default function App() {
         if (err.response?.status === 404) {
           // create if not found
           const payload = { clerk_id: clerkId, email, role: roleParam || "candidate" };
-          const res = await api.post("/users/create", payload);
+          // const res = await api.post("/users/create", payload);
           // optional: backend could return the inserted doc or role
           setUserRole(payload.role);
         } else {
