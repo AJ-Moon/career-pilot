@@ -68,6 +68,25 @@ export default function App() {
         }
       }
     };
+    useEffect(() => {
+  const fetchUserRole = async () => {
+    if (!user) return;
+
+    try {
+      const res = await axios.get(`${BACKEND_URL}/api/users/${user.id}`);
+      if (res.data?.role) {
+        setUserRole(res.data.role);
+      }
+    } catch (err) {
+      console.error("Error fetching user role:", err);
+    }
+  };
+
+  // only run if user is logged in and not a new signup
+  if (user && !newUser) {
+    fetchUserRole();
+  }
+}, [user, newUser]);
 
     if (newUser && user) syncUserWithBackend();
   }, [user, newUser, roleParam]);
