@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useUser, useClerk } from "@clerk/clerk-react";
+import { useClerk } from "@clerk/clerk-react";
 import { apiFetch } from '../api/fetchClient';
 import { Users, Upload, BarChart3, TrendingUp, LogOut, CheckCircle2, Mail, RefreshCcw } from 'lucide-react';
 import CandidateUpload from './CandidateUpload';
@@ -17,7 +17,6 @@ export default function RecruiterDashboard() {
     pending_interviews: 0,
     average_score: 0,
   });
-  const { user } = useUser();
   const clerk = useClerk();
   const [activity, setActivity] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
