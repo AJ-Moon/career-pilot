@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useUser, useClerk } from "@clerk/clerk-react";
 import { apiFetch } from '../api/fetchClient';
 import { Users, Upload, BarChart3, TrendingUp, LogOut, CheckCircle2, Mail, RefreshCcw } from 'lucide-react';
 import CandidateUpload from './CandidateUpload';
@@ -20,10 +21,12 @@ export default function RecruiterDashboard() {
   const [loading, setLoading] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const onLogout = () => {
-    sessionStorage.clear();
-    localStorage.clear();
-    window.location.reload();
+  const onLogout = async () => {
+    try {
+      await clerk.signOut(); // Properly logs out from Clerk
+    } catch (err) {
+      console.error("Failed to logout:", err);
+    }
   };
 
   // ✅ Updated API URLs
