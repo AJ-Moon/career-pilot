@@ -35,35 +35,35 @@ export default function App() {
   const roleParam = urlParams.get("role");
 
   // sync with backend
-  useEffect(() => {
-    const fetchOrCreateUser = async () => {
-      if (!user) return;
+useEffect(() => {
+  const fetchOrCreateUser = async () => {
+    if (!user) {
+      // No Clerk user logged in, stop loading immediately
+      setLoading(false);
+      return;
+    }
 
-      const clerkId = user.id;
-      const email = user.primaryEmailAddress?.emailAddress;
+    const clerkId = user.id;
+    const email = user.primaryEmailAddress?.emailAddress;
 
-      try {
-        // check if user exists in backend (authorized)
-        const res = await api.get(`/users/${clerkId}`);
-        setUserRole(res.data.role);
-      } catch (err: any) {
-        if (err.response?.status === 404) {
-          // create if not found
-          const payload = { clerk_id: clerkId, email, role: roleParam || "candidate" };
-          // const res = await api.post("/users/create", payload);
-          // optional: backend could return the inserted doc or role
-          setUserRole(payload.role);
-        } else {
-          console.error("User sync error:", err);
-        }
-      } finally {
-        setLoading(false);
+    try {
+      const res = await api.get(`/users/${clerkId}`);
+      setUserRole(res.data.role);
+    } catch (err: any) {
+      if (err.response?.status === 404) {
+        const payload = { clerk_id: clerkId, email, role: roleParam || "candidate" };
+        // await api.post("/users/create", payload);
+        setUserRole(payload.role);
+      } else {
+        console.error("User sync error:", err);
       }
-    };
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    if (user) fetchOrCreateUser();
-  }, [user]);
-
+  fetchOrCreateUser();
+}, [user]);
   // show loading screen while fetching role
   if (loading) {
     return (
