@@ -234,20 +234,28 @@ useEffect(() => {
         <LoginPage />
       </SignedOut>
 
-      <SignedIn>
-        <div className="min-h-screen bg-background">
-          <Navigation />
-          <main>{renderPage()}</main>
-          {showPreInterview && (
-            <PreInterviewModal
-              open={showPreInterview}
-              onClose={() => setShowPreInterview(false)}
-              onComplete={() => setCurrentPage("interview")}
-              selectedDomain={selectedDomain}
-            />
-          )}
-        </div>
-      </SignedIn>
+     <SignedIn>
+  {!userRole ? (
+    <div className="flex justify-center items-center h-screen text-gray-600">
+      Loading your dashboard...
+    </div>
+  ) : userRole === "recruiter" ? (
+    <RecruiterDashboard />
+  ) : (
+    <div className="min-h-screen bg-background">
+      <Navigation />
+      <main>{renderPage()}</main>
+      {showPreInterview && (
+        <PreInterviewModal
+          open={showPreInterview}
+          onClose={() => setShowPreInterview(false)}
+          onComplete={() => setCurrentPage("interview")}
+          selectedDomain={selectedDomain}
+        />
+      )}
+    </div>
+  )}
+</SignedIn>
     </>
   );
 }
