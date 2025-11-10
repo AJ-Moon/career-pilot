@@ -93,14 +93,6 @@ useEffect(() => {
   fetchExistingUserRole();
 }, [user]);
 
-  // only run if user is logged in and not a new signup
-  if (user && !newUser) {
-    fetchUserRole();
-  }
-}, [user, newUser]);
-
-    if (newUser && user) syncUserWithBackend();
-  }, [user, newUser, roleParam]);
 
   // Recruiter flow
   if (userRole === "recruiter") {
