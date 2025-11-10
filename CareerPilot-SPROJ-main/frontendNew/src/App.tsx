@@ -1,5 +1,5 @@
 import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/clerk-react";
-import { useEffect, useState } from "react";
+import  { useState, useEffect } from "react";
 import { Bell, ChevronDown } from "lucide-react";
 import { Button } from "./components/ui/button";
 import {
@@ -9,71 +9,70 @@ import {
   DropdownMenuTrigger,
 } from "./components/ui/dropdown-menu";
 import { Badge } from "./components/ui/badge";
+import axios from "axios";
+
+// Candidate imports
 import Dashboard from "./candidate/Dashboard";
 import PreInterviewModal from "./candidate/PreInterviewModal";
 import InterviewSession from "./candidate/InterviewSession";
 import FeedbackPage from "./candidate/FeedbackPage";
 import PracticeLibrary from "./candidate/PracticeLibrary";
 import SettingsPage from "./candidate/SettingsPage";
+
+// Recruiter import
 import RecruiterDashboard from "./recruiter/RecruiterDashboard";
 import LoginPage from "./components/LoginPage";
-import { useApi } from "./lib/api";
 
-type PageType = "dashboard" | "pre-interview" | "interview" | "feedback" | "practice" | "settings";
+type PageType =
+  | "dashboard"
+  | "pre-interview"
+  | "interview"
+  | "feedback"
+  | "practice"
+  | "settings";
 
 export default function App() {
   const { user } = useUser();
-  const api = useApi();
   const [currentPage, setCurrentPage] = useState<PageType>("dashboard");
-  const [selectedDomain, setSelectedDomain] = useState("");
+  const [selectedDomain, setSelectedDomain] = useState<string>("");
   const [showPreInterview, setShowPreInterview] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  // detect role from signup redirect params
+  // Detect role from URL (after signup)
   const urlParams = new URLSearchParams(window.location.search);
+  const newUser = urlParams.get("newUser");
   const roleParam = urlParams.get("role");
+  const BACKEND_URL = "https://career-pilot-s24d.onrender.com";
 
-  // sync with backend
-useEffect(() => {
-  const fetchOrCreateUser = async () => {
-    if (!user) {
-      // No Clerk user logged in, stop loading immediately
-      setLoading(false);
-      return;
-    }
+  useEffect(() => {
+    if (roleParam) setUserRole(roleParam);
+  }, [roleParam]);
 
-    const clerkId = user.id;
-    const email = user.primaryEmailAddress?.emailAddress;
+  useEffect(() => {
+    const syncUserWithBackend = async () => {
+      if (!user) return;
 
-    try {
-      const res = await api.get(`/users/${clerkId}`);
-      setUserRole(res.data.role);
-    } catch (err: any) {
-      if (err.response?.status === 404) {
-        const payload = { clerk_id: clerkId, email, role: roleParam || "candidate" };
-        await api.post("/users/create", payload);
-        setUserRole(payload.role);
-      } else {
-        console.error("User sync error:", err);
+      const clerkId = user.id;
+      const email = user.primaryEmailAddress?.emailAddress;
+
+      try {
+        await axios.get(`${BACKEND_URL}/api/users/${clerkId}`);
+      } catch (error: any) {
+        if (error.response && error.response.status === 404) {
+          const payload = {
+            clerk_id: clerkId,
+            email,
+            role: roleParam || "candidate",
+          };
+          await axios.post(`${BACKEND_URL}/api/users/create`, payload);
+        }
       }
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  fetchOrCreateUser();
-}, [user]);
-  // show loading screen while fetching role
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen text-gray-600">
-        Loading your dashboard...
-      </div>
-    );
-  }
+    if (newUser && user) syncUserWithBackend();
+  }, [user, newUser, roleParam]);
 
-  // recruiter route
+  // Recruiter flow
   if (userRole === "recruiter") {
     return (
       <>
@@ -88,7 +87,7 @@ useEffect(() => {
     );
   }
 
-  // candidate navigation
+  // Candidate navigation
   const Navigation = () => (
     <nav className="bg-white border-b border-border px-6 py-4">
       <div className="flex items-center justify-between max-w-7xl mx-auto">
@@ -117,7 +116,10 @@ useEffect(() => {
                 "Design",
                 "Electrical/Mechanical",
               ].map((domain) => (
-                <DropdownMenuItem key={domain} onClick={() => setSelectedDomain(domain)}>
+                <DropdownMenuItem
+                  key={domain}
+                  onClick={() => setSelectedDomain(domain)}
+                >
                   {domain}
                 </DropdownMenuItem>
               ))}
@@ -153,7 +155,9 @@ useEffect(() => {
 
           <Button variant="ghost" size="icon" className="relative">
             <Bell className="w-4 h-4" />
-            <Badge className="absolute -top-1 -right-1 bg-destructive text-xs">2</Badge>
+            <Badge className="absolute -top-1 -right-1 bg-destructive text-xs">
+              2
+            </Badge>
           </Button>
           <UserButton afterSignOutUrl="/" />
         </div>
@@ -181,13 +185,24 @@ useEffect(() => {
           />
         );
       case "feedback":
-        return <FeedbackPage domain={selectedDomain} onBackToDashboard={() => setCurrentPage("dashboard")} />;
+        return (
+          <FeedbackPage
+            domain={selectedDomain}
+            onBackToDashboard={() => setCurrentPage("dashboard")}
+          />
+        );
       case "practice":
         return <PracticeLibrary />;
       case "settings":
-        return <SettingsPage />;
+        return <SettingsPage />; // ✅ No props needed
       default:
-        return <Dashboard onStartInterview={() => setShowPreInterview(true)} selectedDomain={selectedDomain} setSelectedDomain={setSelectedDomain} />;
+        return (
+          <Dashboard
+            onStartInterview={() => setShowPreInterview(true)}
+            selectedDomain={selectedDomain}
+            setSelectedDomain={setSelectedDomain}
+          />
+        );
     }
   };
 
@@ -214,3 +229,4 @@ useEffect(() => {
     </>
   );
 }
+
