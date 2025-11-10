@@ -52,7 +52,7 @@ useEffect(() => {
     } catch (err: any) {
       if (err.response?.status === 404) {
         const payload = { clerk_id: clerkId, email, role: roleParam || "candidate" };
-        // await api.post("/users/create", payload);
+        await api.post("/users/create", payload);
         setUserRole(payload.role);
       } else {
         console.error("User sync error:", err);
