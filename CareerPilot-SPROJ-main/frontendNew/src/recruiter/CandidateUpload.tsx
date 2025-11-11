@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-
+import { useAuth } from "@clerk/clerk-react";
 import { Upload, FileText, X, CheckCircle, Send } from 'lucide-react';
 import { apiFetch } from '../api/fetchClient';
 
@@ -21,7 +21,7 @@ interface UploadedFile {
 export default function CandidateUpload({ onUploadComplete }: { onUploadComplete?: () => void }) {
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+const { getToken } = useAuth();
   const handleFiles = async (fileList: FileList) => {
     const newFiles: UploadedFile[] = Array.from(fileList).map((f) => ({
       id: crypto.randomUUID(),
@@ -32,6 +32,7 @@ export default function CandidateUpload({ onUploadComplete }: { onUploadComplete
     setFiles((prev) => [...prev, ...newFiles]);
 
     const form = new FormData();
+    
     for (const file of Array.from(fileList)) form.append('files', file);
 
     try {
@@ -42,10 +43,19 @@ export default function CandidateUpload({ onUploadComplete }: { onUploadComplete
             : f
         )
       );
-
+   try {
+        const token = await getToken();
+        if (!token) {
+          console.error(
+            "No Clerk token available — user might not be signed in"
+          );
+          return;
+        }
       const res: { created: { id: string; email: string }[] } = await apiFetch(
         '/api/recruiter/candidates/upload-resumes',
-        { method: 'POST', body: form }
+        { method: 'POST', headers: {
+          Authorization: `Bearer ${token}`, // ✅ add Clerk JWT
+        }, body: form }
       );
       
       setFiles((prev) =>
@@ -93,18 +103,6 @@ export default function CandidateUpload({ onUploadComplete }: { onUploadComplete
   const sendInvites = async () => {
     if (!successful.length) return;
     try {
-      // Commenting out edit email / resend invite for now
-      /*
-      await Promise.all(
-        successful.map((f) =>
-          apiFetch(`/api/recruiter/candidates/${f.candidateId}/email`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: f.email, resend_invite: true }),
-          })
-        )
-      );  
-      */
       alert(`Invites would be sent to ${successful.length} candidates`);
       onUploadComplete?.();
     } catch (err) {
