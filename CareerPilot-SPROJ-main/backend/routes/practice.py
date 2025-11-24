@@ -6,33 +6,6 @@ from typing import Optional
 
 router = APIRouter()
 
-# @router.get("/software")
-# async def get_software_questions(
-#     difficulty: list[str] = Query(default=["all"]),  # Accept multiple values like ["Medium", "Hard"]
-#     limit: int = 10
-# ):
-#     try:
-#         data_path = os.path.join(os.path.dirname(__file__), "../data/software_questions.json")
-#         with open(data_path, "r") as f:
-#             all_questions = json.load(f)
-
-#         # Normalize difficulty values
-#         difficulty = [d.lower() for d in difficulty]
-
-#         # Filter questions
-#         if "all" in difficulty:
-#             filtered = all_questions
-#         else:
-#             filtered = [
-#                 q for q in all_questions
-#                 if q["difficulty"].lower() in difficulty
-#             ]
-
-#         random.shuffle(filtered)
-#         return {"count": len(filtered[:limit]), "questions": filtered[:limit]}
-
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=f"Error loading questions: {str(e)}")
 
 @router.get("/software")
 async def get_software_questions(

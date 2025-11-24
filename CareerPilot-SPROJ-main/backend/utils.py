@@ -35,10 +35,61 @@ async def save_upload(file) -> str:
             await out.write(chunk)
     return str(dest)
 
-def extract_email_from_text(text: str) -> Optional[str]:
-    """Return first matched email in text (lowercased) or None."""
-    m = EMAIL_RE.search(text)
-    return m.group(0).lower() if m else None
+IGNORE_PATTERNS = [
+    r"support@", r"info@", r"admin@", r"noreply@", r"github\.com", r"linkedin\.com"
+]
+
+def extract_email_from_text(text: str, top_chars: int = 500) -> Optional[str]:
+    """
+    Extract the most likely candidate email from resume text.
+
+    Steps:
+    1. Find all email-like strings in the text using regex.
+    2. Filter out obvious non-personal emails.
+    3. Prefer emails appearing in the first `top_chars` characters (top of document).
+    4. Fallback to first remaining email anywhere.
+    """
+    print("📝 --- Raw PDF text start ---")
+    print(text[:1000])  # print first 1000 chars for readability
+    print("📝 --- Raw PDF text end ---\n")
+    # Find all emails
+    text = text.replace("\u200b", "").replace("\xa0", " ").strip()
+    emails = EMAIL_RE.findall(text)
+    # if email:
+    #  print([ord(c) for c in email])
+    # else:
+    #  print("No email found")
+
+    print(f"🔍 All emails found: {emails}")
+    if not emails:
+        print("hi")
+        return None
+    
+
+    # Filter out ignored patterns
+    filtered_emails = []
+    for email in emails:
+        print("hi1")
+        if any(re.search(pat, email, re.IGNORECASE) for pat in IGNORE_PATTERNS):
+            print("hi2")
+            continue
+        filtered_emails.append(email)
+
+    if not filtered_emails:
+        print("hi3")
+        return None
+
+    # Prefer email in the top of document
+    top_text = text[:top_chars]
+    for email in filtered_emails:
+        if email in top_text:
+            return email.lower()
+
+    # Fallback: return first filtered email anywhere
+    print("hi4")
+    print("final",filtered_emails[0].lower())
+    return filtered_emails[0].lower()
+
 
 def get_text_from_pdf(path: str) -> str:
     """

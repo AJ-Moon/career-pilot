@@ -4,7 +4,7 @@ from routes import auth
 from config import db 
 from routes import resume
 from routes import user_data,practice
-from routes import candidates, dashboard,interview_webhook
+from routes import candidates, dashboard,interview_webhook,jobs
 
 
 app = FastAPI()
@@ -35,6 +35,8 @@ app.include_router(practice.router, prefix="/api/practice", tags=["Practice"])
 app.include_router(candidates.router, prefix="/api/recruiter/candidates", tags=["Recruiter - Candidates"])
 app.include_router(dashboard.router, prefix="/api/recruiter/dashboard", tags=["Recruiter - Dashboard"])
 app.include_router(interview_webhook.router, prefix="/api/webhooks", tags=["Webhooks"])
+
+app.include_router(jobs.router, prefix="/api/jobs", tags=["jobs"])
 
 @app.get("/")
 def root():
