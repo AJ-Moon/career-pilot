@@ -3,14 +3,17 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import axios from "axios";
 
-// Candidate imports
+// Layouts
+import CandidateLayout from "./layouts/CandidateLayout";
+
+// Candidate pages
 import Dashboard from "./candidate/Dashboard";
 import InterviewSession from "./candidate/InterviewSession";
 import FeedbackPage from "./candidate/FeedbackPage";
 import PracticeLibrary from "./candidate/PracticeLibrary";
 import SettingsPage from "./candidate/SettingsPage";
 
-// Recruiter imports
+// Recruiter pages
 import { Dashboard_recruiter } from "./recruiter/Dashboard_Recruiter";
 import LoginPage from "./components/LoginPage";
 
@@ -18,9 +21,10 @@ export default function App() {
   const { user } = useUser();
   const [userRole, setUserRole] = useState<string | null>(null);
   const [selectedDomain, setSelectedDomain] = useState<string>("");
+
   const BACKEND_URL = "https://career-pilot-s24d.onrender.com";
 
-  // Sync new user if coming from signup URL
+  // Sync new user from signup redirect
   useEffect(() => {
     if (!user) return;
 
@@ -44,13 +48,12 @@ export default function App() {
       };
 
       syncUser().finally(() => {
-        // Clean URL after syncing to prevent re-sync on reload
         window.history.replaceState({}, document.title, "/");
       });
     }
   }, [user]);
 
-  // Fetch role for existing users
+  // Fetch existing user role
   useEffect(() => {
     if (!user) return;
 
@@ -69,7 +72,6 @@ export default function App() {
 
   if (!user) return <SignedOut><LoginPage /></SignedOut>;
 
-  // Show loading screen while role is being fetched
   if (userRole === null) {
     return (
       <SignedIn>
@@ -84,6 +86,8 @@ export default function App() {
     <SignedIn>
       <BrowserRouter>
         <Routes>
+
+          {/* === Recruiter Routes === */}
           {userRole === "recruiter" ? (
             <>
               <Route path="/recruiter/*" element={<Dashboard_recruiter />} />
@@ -91,16 +95,40 @@ export default function App() {
             </>
           ) : (
             <>
+              {/* === Candidate Routes (wrapped with layout) === */}
+
               <Route
                 path="/"
                 element={
-                  <Dashboard
-                    selectedDomain={selectedDomain}
-                    setSelectedDomain={setSelectedDomain}
-                    onStartInterview={() => {}}
-                  />
+                  <CandidateLayout>
+                    <Dashboard
+                      selectedDomain={selectedDomain}
+                      setSelectedDomain={setSelectedDomain}
+                      onStartInterview={() => {}}
+                    />
+                  </CandidateLayout>
                 }
               />
+
+              <Route
+                path="/practice"
+                element={
+                  <CandidateLayout>
+                    <PracticeLibrary />
+                  </CandidateLayout>
+                }
+              />
+
+              <Route
+                path="/settings"
+                element={
+                  <CandidateLayout>
+                    <SettingsPage />
+                  </CandidateLayout>
+                }
+              />
+
+              {/* Interview session (NO HEADER) */}
               <Route
                 path="/interview"
                 element={
@@ -112,15 +140,22 @@ export default function App() {
                   />
                 }
               />
+
               <Route
                 path="/feedback"
-                element={<FeedbackPage domain={selectedDomain} onBackToDashboard={() => {}} />}
+                element={
+                  <FeedbackPage
+                    domain={selectedDomain}
+                    onBackToDashboard={() => {}}
+                  />
+                }
               />
-              <Route path="/practice" element={<PracticeLibrary />} />
-              <Route path="/settings" element={<SettingsPage />} />
+
               <Route path="*" element={<Navigate to="/" />} />
+
             </>
           )}
+
         </Routes>
       </BrowserRouter>
     </SignedIn>
