@@ -1,9 +1,9 @@
 import { TrendingUp, TrendingDown } from 'lucide-react';
-import { JSX } from "react";
+import type { ReactElement, SVGProps } from "react";
 interface KPICardProps {
   title: string;
   value: string;
-  icon: (props: React.SVGProps<SVGSVGElement>) => JSX.Element; // <- correct typing
+  icon: (props: React.SVGProps<SVGSVGElement>) =>  ReactElement;
   trend: string;
   trendUp?: boolean;
 }
@@ -32,3 +32,4 @@ export function KPICard({ title, value, icon: Icon, trend, trendUp }: KPICardPro
     </div>
   );
 }
+
