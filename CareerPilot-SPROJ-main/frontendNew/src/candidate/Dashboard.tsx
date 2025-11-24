@@ -29,6 +29,8 @@ import {
 interface DashboardProps {
   selectedDomain: string;
   setSelectedDomain: (domain: string) => void;
+  onStartInterview?: () => void;
+
 }
 const BACKEND_URL = "http://localhost:5005";
 
