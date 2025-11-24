@@ -32,7 +32,7 @@ interface DashboardProps {
   onStartInterview?: () => void;
 
 }
-const BACKEND_URL = "http://localhost:5005";
+const BACKEND_URL = "https://career-pilot-s24d.onrender.com";
 
 const domains = [
   { id: "software", name: "Software Engineering", icon: Code, color: "bg-blue-500", accent: "border-l-blue-500" },
