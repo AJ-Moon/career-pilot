@@ -1,0 +1,570 @@
+[
+
+    {
+      "category": "Communication",
+      "question": "Explain to me a technical concept related to the role that you’re interviewing for.",
+      "answer": "Choose a concept you deeply understand, such as gradient boosting or A/B testing, and explain it in simple, clear terms. For example, 'Gradient boosting is an ensemble method that combines many weak decision trees to create a strong predictive model by iteratively correcting the errors of previous trees.'"
+    },
+    {
+      "category": "Communication",
+      "question": "Introduce me to something you’re passionate about.",
+      "answer": "Share a topic you genuinely care about — ideally one related to technology, data, or problem solving. Explain why it interests you and how you’ve explored it (e.g., open-source contributions, side projects, or research)."
+    },
+    {
+      "category": "Communication",
+      "question": "How would you explain an A/B test to an engineer with no statistics background? A linear regression?",
+      "answer": "A/B testing compares two versions of something (like a webpage) to see which performs better by randomly splitting users into groups and measuring outcomes. A linear regression finds the best-fitting line that predicts a numeric outcome based on input variables."
+    },
+    {
+      "category": "Communication",
+      "question": "How would you explain a confidence interval to an engineer with no statistics background? What does 95% confidence mean?",
+      "answer": "A 95% confidence interval gives a range of values that, if we repeated the experiment many times, would contain the true value 95% of the time. It reflects uncertainty in estimation, not the probability that the true value lies in that specific range."
+    },  
+    
+      {
+        "category": "Predictive Modeling",
+        "question": "(Given a Dataset) Analyze this dataset and give me a model that can predict this response variable.",
+        "answer": "Start with simple models (e.g., linear or logistic regression), perform feature engineering, and validate performance using cross-validation. Split data into training, validation, and test sets. Favor simple, interpretable models before moving to more complex ones like tree ensembles."
+      },
+      {
+        "category": "Predictive Modeling",
+        "question": "What could be some issues if the distribution of the test data is significantly different than the distribution of the training data?",
+        "answer": "The model might perform poorly on test data due to dataset shift. This can happen if P(x) or P(y|x) changes over time. Use domain adaptation techniques, retraining, or covariate shift correction to improve generalization."
+      },
+      {
+        "category": "Predictive Modeling",
+        "question": "What are some ways I can make my model more robust to outliers?",
+        "answer": "Use robust loss functions such as MAE or Huber loss, tree-based models, or data transformations (like log). You can also Winsorize or remove extreme values if they’re truly anomalies."
+      },
+      {
+        "category": "Predictive Modeling",
+        "question": "What are some differences you would expect in a model that minimizes squared error versus a model that minimizes absolute error?",
+        "answer": "Minimizing squared error (MSE) penalizes large errors heavily, making it sensitive to outliers. Minimizing absolute error (MAE) treats all errors equally, making it more robust. MSE is easier to optimize; MAE is preferred when outliers are expected."
+      },
+      {
+        "category": "Predictive Modeling",
+        "question": "What error metric would you use to evaluate how good a binary classifier is? What if the classes are imbalanced? What if there are more than two groups?",
+        "answer": "Use accuracy for balanced classes. For imbalanced data, prefer AUC-ROC, F1-score, or precision-recall curves. For multi-class problems, extend metrics like log loss or use macro/micro-averaged F1."
+      },
+      {
+        "category": "Predictive Modeling",
+        "question": "What are various ways to predict a binary response variable? Compare two methods and explain when each is more appropriate.",
+        "answer": "Options include logistic regression, SVM, decision trees, random forests, and Naive Bayes. Logistic regression is fast and interpretable for linear relationships, while tree ensembles handle nonlinearities and categorical features more effectively."
+      },
+      {
+        "category": "Predictive Modeling",
+        "question": "What is regularization and where might it be helpful?",
+        "answer": "Regularization (L1, L2) penalizes large coefficients to prevent overfitting and improve generalization. L1 (Lasso) encourages sparsity; L2 (Ridge) reduces variance by shrinking weights."
+      },
+      {
+        "category": "Predictive Modeling",
+        "question": "Why might it be preferable to include fewer predictors rather than many?",
+        "answer": "Too many predictors increase model complexity, risk overfitting, and reduce interpretability. Fewer predictors improve generalization and computation efficiency, especially with limited data."
+      },
+      {
+        "category": "Predictive Modeling",
+        "question": "Given training data on tweets and their retweets, how would you predict the number of retweets after 7 days using only 2 days of data?",
+        "answer": "Use time-series modeling (e.g., exponential smoothing or ARIMA) or regression with time-based features. Include features like retweets in the first 2 days, tweet type, hashtags, and engagement metrics."
+      },
+      {
+        "category": "Predictive Modeling",
+        "question": "How could you collect and analyze data to use social media to predict the weather?",
+        "answer": "Collect social media posts using APIs (e.g., Twitter API), extract weather-related keywords, and use natural language processing to quantify sentiment or frequency. Then correlate patterns with actual weather data."
+      },
+      {
+        "category": "Predictive Modeling",
+        "question": "How would you construct a feed to show relevant content for a site that involves user interactions with items?",
+        "answer": "Use recommendation algorithms — collaborative filtering if enough user-item interaction data exists, or content-based filtering if not. Blend both approaches (hybrid systems) for personalization."
+      },
+      {
+        "category": "Predictive Modeling",
+        "question": "How would you design the 'People You May Know' feature on LinkedIn or Facebook?",
+        "answer": "Model user connections as a graph. Suggest people based on mutual connections, shared workplaces, or locations. Use graph-based algorithms like link prediction and similarity scores."
+      },
+      {
+        "category": "Predictive Modeling",
+        "question": "How would you predict who someone may want to send a Snapchat or Gmail to?",
+        "answer": "Use historical communication patterns to build a ranking model. Features might include message frequency, recency, and response likelihood. Apply time-decay weighting for relevance."
+      },
+      {
+        "category": "Predictive Modeling",
+        "question": "How would you suggest to a franchise where to open a new store?",
+        "answer": "Use regression or spatial analysis models based on local demographics, income, traffic, population density, and nearby competitors. Predict store performance based on historical data."
+      },
+      {
+        "category": "Predictive Modeling",
+        "question": "In a search engine, given partial user input, how would you predict the user’s full query?",
+        "answer": "Use n-gram language models or transformer-based autocomplete models trained on search logs. Predict likely completions based on frequency and recency of similar queries."
+      },
+      {
+        "category": "Predictive Modeling",
+        "question": "Given a database of all previous alumni donations, how would you predict which recent alumni are most likely to donate?",
+        "answer": "Train a classification model (e.g., logistic regression, random forest) using features such as donation history, graduation year, engagement level, and major. Rank alumni by predicted donation probability."
+      },
+      {
+        "category": "Predictive Modeling",
+        "question": "You’re Uber and want to design a heatmap to recommend to drivers where to wait for passengers. How would you approach this?",
+        "answer": "Analyze historical pickup data by time of day, location, and events. Build spatiotemporal models or clustering (e.g., DBSCAN) to highlight demand hotspots dynamically."
+      },
+      {
+        "category": "Predictive Modeling",
+        "question": "How would you build a model to predict a March Madness bracket?",
+        "answer": "Use historical team statistics to model win probabilities. Represent each matchup as a feature vector and train a model (e.g., logistic regression or gradient boosting). Use simulation to predict tournament outcomes."
+      },
+      {
+        "category": "Predictive Modeling",
+        "question": "You want to run a regression to predict the probability of flight delays, but there are extreme outliers (12-hour delays). How can you address this?",
+        "answer": "Apply robust regression methods (e.g., quantile regression or Huber loss), or cap extreme delay values to reduce their influence on the model."
+      }
+  ,    
+  
+    {
+      "category": "Probability",
+      "question": "Bobo the amoeba has a 25%, 25%, and 50% chance of producing 0, 1, or 2 offspring, respectively. What is the probability that Bobo’s lineage dies out?",
+      "answer": "Let p be the probability of extinction. Then p = 0.25 + 0.25p + 0.5p². Solving gives p = 0.5. So there’s a 50% chance that the lineage dies out."
+    },
+    {
+      "category": "Probability",
+      "question": "In any 15-minute interval, there is a 20% probability that you will see at least one shooting star. What is the probability that you see at least one shooting star in one hour?",
+      "answer": "The probability of not seeing any in 15 minutes is 0.8. Over 4 intervals (1 hour), that’s 0.8⁴ = 0.4096. Therefore, the probability of seeing at least one is 1 - 0.4096 ≈ 0.59."
+    },
+    {
+      "category": "Probability",
+      "question": "How can you generate a random number between 1 and 7 using only a fair six-sided die?",
+      "answer": "Roll the die three times to generate three bits: for each roll, record 0 if 1–3 and 1 if 4–6. This gives a 3-bit number (0–7). Repeat if you get 0; otherwise, return the result (1–7)."
+    },
+    {
+      "category": "Probability",
+      "question": "How can you get a fair coin toss if someone hands you a biased coin?",
+      "answer": "Flip the coin twice. If the result is Heads-Tails (HT), count it as Heads. If Tails-Heads (TH), count it as Tails. Otherwise, repeat. This cancels out bias."
+    },
+    {
+      "category": "Probability",
+      "question": "You have a 50–50 mixture of two normal distributions with the same standard deviation. How far apart must the means be for the mixture to be bimodal?",
+      "answer": "The means should be separated by more than approximately two standard deviations for the distribution to appear bimodal."
+    },
+    {
+      "category": "Probability",
+      "question": "Given draws from a normal distribution with known parameters, how can you simulate draws from a uniform distribution?",
+      "answer": "Apply the cumulative distribution function (CDF) of the normal distribution to the samples. The resulting values will follow a uniform (0,1) distribution."
+    },
+    {
+      "category": "Probability",
+      "question": "A couple has two children, at least one of whom is a girl. What is the probability that both children are girls?",
+      "answer": "Outcomes given at least one girl: GG, GB, BG. Only GG satisfies both girls. Probability = 1/3."
+    },
+    {
+      "category": "Probability",
+      "question": "A group of couples decides to have children until they have their first girl. What is the expected gender ratio and expected number of children per couple?",
+      "answer": "Each child has a 50% chance of being a girl. Expected ratio of boys to girls is 1:1. Expected number of children is 2 (geometric distribution with p = 0.5)."
+    },
+    {
+      "category": "Probability",
+      "question": "How many ways can you split 12 people into 3 teams of 4?",
+      "answer": "The count is given by 12! / ((4!)³ × 3!) because teams are indistinguishable."
+    },
+    {
+      "category": "Probability",
+      "question": "Your hash function assigns each object a number between 1–10 uniformly. With 10 objects, what is the probability of at least one collision?",
+      "answer": "Probability of no collisions = 10! / 10¹⁰ ≈ 0.00036. Thus, probability of at least one collision ≈ 1 - 0.00036 = 0.99964 (almost certain)."
+    },
+    {
+      "category": "Probability",
+      "question": "You call 2 UberX’s and 3 Lyfts. Assuming all arrival times are IID, what’s the probability all Lyfts arrive first? All Ubers first?",
+      "answer": "For Lyfts first: (3/5) × (2/4) × (1/3) = 1/10. For Ubers first: (2/5) × (1/4) = 1/10."
+    },
+    {
+      "category": "Probability",
+      "question": "In the FizzBuzz problem (replace multiples of 3 with 'Fizz', 5 with 'Buzz', and 15 with 'FizzBuzz'), how many numbers between 1–300 are replaced?",
+      "answer": "Multiples of 3: 100, multiples of 5: 60, overlap (15): 20. Total = 100 + 60 - 20 = 140."
+    },
+    {
+      "category": "Probability",
+      "question": "On a dating site, users pick 5 adjectives out of 24. A match occurs if two users share at least 4 adjectives. What is the probability of a match?",
+      "answer": "Probability ≈ 4/1771 (computed via combinatorial overlap among selected adjectives)."
+    },
+    {
+      "category": "Probability",
+      "question": "A lazy student randomly stuffs n applications into n envelopes. What is the expected number of correct matches?",
+      "answer": "The expected number of correct matches is always 1, regardless of n (a classic result of the 'matching problem')."
+    },
+    {
+      "category": "Probability",
+      "question": "If a father is very tall, what would you expect the height of his son to be? What about a very short father?",
+      "answer": "On average, the son's height regresses toward the mean — tall fathers have shorter sons, and short fathers have taller sons (regression to the mean)."
+    },
+    {
+      "category": "Probability",
+      "question": "What’s the expected number of coin flips until you get two heads in a row?",
+      "answer": "Expected number of flips = 6. (Derived using Markov chain analysis with states representing last flip outcomes.)"
+    },
+    {
+      "category": "Probability",
+      "question": "In a game where you flip a coin until the first heads, and get paid $2ⁿ⁻¹ if the first heads is on the nth flip, how much is the game worth?",
+      "answer": "The expected value diverges theoretically, but in practice, most would pay less than $3 due to risk aversion (St. Petersburg paradox)."
+    },
+    {
+      "category": "Probability",
+      "question": "You have two coins: one fair (P(H)=0.5) and one biased (P(H)=0.75). You pick one at random and flip twice, getting two heads. What is the probability you picked the fair coin?",
+      "answer": "P(fair|2 heads) = (0.25×0.5) / [(0.25×0.5) + (0.5625×0.5)] = 4/13 ≈ 0.31."
+    },
+    {
+      "category": "Probability",
+      "question": "You have a 0.1% chance of picking up a double-headed coin and 99.9% of picking up a fair coin. After flipping 10 heads in a row, what’s the chance you picked the fair coin?",
+      "answer": "Using Bayes’ theorem: P(fair|10 heads) = 1 / (1 + 0.001 × 2¹⁰ / 0.999) ≈ 0.5. After 10 heads, both coins are equally likely."
+    },
+    {
+      "category": "Probability",
+      "question": "What is a p-value?",
+      "answer": "It’s the probability of observing a result as extreme or more extreme than the one obtained, assuming the null hypothesis is true. A small p-value suggests evidence against the null."
+    }
+  ,  
+  
+    {
+      "category": "Product Metrics",
+      "question": "What would be good metrics of success for an advertising-driven consumer product? For a service-driven consumer product?",
+      "answer": "Advertising-driven: pageviews, click-through rate (CTR), cost per click (CPC), and engagement rate. Service-driven: conversion rate, number of purchases, active users, and customer retention."
+    },
+    {
+      "category": "Product Metrics",
+      "question": "What would be good metrics of success for a productivity tool (e.g., Google Docs, Asana) or a MOOC (e.g., Coursera, edX)?",
+      "answer": "Productivity tool: daily active users, collaboration frequency, document creation rate, and retention. MOOC: course completion rate, active learners, engagement per module, and subscription renewals."
+    },
+    {
+      "category": "Product Metrics",
+      "question": "What would be good metrics of success for an e-commerce product or a subscription product?",
+      "answer": "E-commerce: conversion rate, average order value, repeat purchase rate, cart abandonment rate, and inventory turnover. Subscription: churn rate, customer lifetime value (LTV), monthly recurring revenue (MRR), and average revenue per user (ARPU)."
+    },
+    {
+      "category": "Product Metrics",
+      "question": "What would be good metrics of success for a social or messaging product that relies heavily on engagement?",
+      "answer": "Engagement-heavy product: daily active users (DAU), session length, interaction rate, and user retention. Messaging product: messages sent per user, active conversation rate, and message response time."
+    },
+    {
+      "category": "Product Metrics",
+      "question": "What would be good metrics of success for a product offering in-app purchases, such as mobile games?",
+      "answer": "Average Revenue Per User (ARPU), Average Revenue Per Paying User (ARPPU), conversion rate from free to paid, and frequency of purchases."
+    },
+    {
+      "category": "Product Metrics",
+      "question": "A certain metric is behaving unexpectedly (going up or down). How would you identify the cause?",
+      "answer": "Break down the metric into sub-metrics (e.g., by channel, user type, or geography). Compare segments over time and look for changes in campaigns, user behavior, or external factors."
+    },
+    {
+      "category": "Product Metrics",
+      "question": "Growth for total number of tweets sent has slowed this month. What data would you look at to find the cause?",
+      "answer": "Analyze user activity trends, engagement across regions, new user acquisition, and retention. Compare against competitors and check if platform changes or outages affected usage."
+    },
+    {
+      "category": "Product Metrics",
+      "question": "You’re a restaurant approached by Groupon to run a deal. What data would you request to decide whether to proceed?",
+      "answer": "Data on similar restaurants: average revenue gain per coupon, number of new vs. repeat customers, redemption rate, and customer spend post-promotion."
+    },
+    {
+      "category": "Product Metrics",
+      "question": "You are tasked with improving the efficiency of a subway system. Where would you start?",
+      "answer": "Define 'efficiency' (e.g., reduced wait time, increased throughput). Measure key metrics like train frequency, passenger load, delays, and dwell time. Identify bottlenecks and test schedule or routing changes."
+    },
+    {
+      "category": "Product Metrics",
+      "question": "You’re working on Facebook News Feed. What metrics are important, and how would you make the feed more relevant?",
+      "answer": "Important metrics: engagement rate (likes, comments, shares), time spent, and click-through rate. Relevance can be improved by weighting posts using an affinity score (user–creator closeness), content type weight, and time decay factor."
+    },
+    {
+      "category": "Product Metrics",
+      "question": "How would you measure the impact of sponsored stories on user engagement, and find the right balance between ads and organic content?",
+      "answer": "Run an A/B test with different ad-to-organic ratios. Measure engagement metrics such as session duration, CTR, and post-interaction rates to find the optimal balance."
+    },
+    {
+      "category": "Product Metrics",
+      "question": "You’re on Uber’s data science team tasked with surge pricing. What are the objectives, and how would you start?",
+      "answer": "Objective: balance supply (drivers) and demand (riders). Analyze historical trip data, driver availability, and demand spikes. Model price elasticity across cities and times to optimize surge thresholds."
+    },
+    {
+      "category": "Product Metrics",
+      "question": "If you worked at Netflix, how would you decide which original series to produce?",
+      "answer": "Use data on viewing trends, completion rates, genre popularity, and audience demographics to estimate market potential. Prioritize shows with strong predicted engagement and low churn risk."
+    },
+    {
+      "category": "Product Metrics",
+      "question": "Which types of services would find churn metrics most helpful, and how is churn calculated?",
+      "answer": "Subscription-based or recurring services (e.g., Netflix, Spotify). Churn = (Customers lost during period) / (Total customers at start of period). It measures customer retention and satisfaction."
+    }
+  ,  
+  
+    {
+      "category": "Statistical Inference",
+      "question": "In an A/B test, how can you check if assignment to the various buckets was truly random?",
+      "answer": "Compare feature distributions (e.g., demographics, engagement metrics) between groups using visualizations or statistical tests such as t-tests or Chi-square tests. Ideally, all distributions should be similar across A and B."
+    },
+    {
+      "category": "Statistical Inference",
+      "question": "What might be the benefits of running an A/A test, where both groups see the exact same product?",
+      "answer": "It verifies that your randomization, sampling, and data pipelines are working correctly. It also helps estimate the natural variance (noise) before running the actual A/B test."
+    },
+    {
+      "category": "Statistical Inference",
+      "question": "What would be the hazards of letting users peek at another experimental bucket in an A/B test?",
+      "answer": "It introduces bias since users may change their behavior after seeing the other variant. This breaks randomization and contaminates the control and treatment effects."
+    },
+    {
+      "category": "Statistical Inference",
+      "question": "What would be some issues if blogs or media outlets cover one of your experimental groups?",
+      "answer": "External exposure affects user perception and behavior, violating test independence. This leads to non-random sampling and potentially invalid results."
+    },
+    {
+      "category": "Statistical Inference",
+      "question": "How would you conduct an A/B test on an opt-in feature?",
+      "answer": "Use a two-step design: first randomize who gets invited to opt-in, then analyze only those who accepted. Alternatively, use intent-to-treat (ITT) analysis to account for self-selection bias."
+    },
+    {
+      "category": "Statistical Inference",
+      "question": "How would you run an A/B test for many variants, say 20 or more?",
+      "answer": "Use one control and multiple treatment groups with sufficient sample size. Apply multiple-comparison corrections like Bonferroni or Holm-Bonferroni to control false positives."
+    },
+    {
+      "category": "Statistical Inference",
+      "question": "How would you run an A/B test if the observations are extremely right-skewed?",
+      "answer": "Apply transformations (e.g., log or Box-Cox) or use median-based or percentile metrics. You can also cap extreme values or use non-parametric tests."
+    },
+    {
+      "category": "Statistical Inference",
+      "question": "If two experiments both change the sign-up button, can you test them at the same time?",
+      "answer": "Only if they are mutually exclusive (users see one variation only). Otherwise, interaction effects may confound results."
+    },
+    {
+      "category": "Statistical Inference",
+      "question": "What is a p-value? What is the difference between Type I and Type II error?",
+      "answer": "A p-value measures the probability of observing your data (or more extreme) if the null hypothesis were true. Type I error = false positive (rejecting a true null). Type II error = false negative (failing to reject a false null)."
+    },
+    {
+      "category": "Statistical Inference",
+      "question": "You’re Airbnb testing whether more photos increase booking likelihood. How would you design the experiment?",
+      "answer": "Randomly select listings with multiple photos. Hide one photo for group A and show all for group B. Compare booking rates between groups using statistical tests (e.g., t-test or Chi-square)."
+    },
+    {
+      "category": "Statistical Inference",
+      "question": "How would you design an experiment to determine the impact of latency on user engagement?",
+      "answer": "Run a controlled slowdown experiment. Intentionally delay page loads for one group and compare engagement (session duration, clicks, conversion) against a control group."
+    },
+    {
+      "category": "Statistical Inference",
+      "question": "What is Maximum Likelihood Estimation (MLE)? Could there be cases where it doesn’t exist?",
+      "answer": "MLE finds parameter values that maximize the likelihood of observing the given data. It may not exist if the likelihood function has no maximum (e.g., unbounded or degenerate cases like Gaussian mixtures)."
+    },
+    {
+      "category": "Statistical Inference",
+      "question": "What’s the difference between MAP, MOM, and MLE estimators? When would you use each?",
+      "answer": "MLE maximizes likelihood based only on data. MAP (Maximum A Posteriori) adds a prior belief to MLE. MOM (Method of Moments) matches sample moments to population moments. MAP is used when prior information exists; MLE when data dominates; MOM when computation needs simplicity."
+    },
+    {
+      "category": "Statistical Inference",
+      "question": "What is a confidence interval and how do you interpret it?",
+      "answer": "A 95% confidence interval means that if we repeated the experiment many times, about 95% of those intervals would contain the true population parameter. It expresses uncertainty around an estimate, not the probability the parameter lies in the range."
+    },
+    {
+      "category": "Statistical Inference",
+      "question": "What is unbiasedness as a property of an estimator? Is it always desirable?",
+      "answer": "An estimator is unbiased if its expected value equals the true parameter. While desirable for inference, it’s not always ideal in predictive modeling, where introducing bias can reduce variance and improve generalization."
+    },
+    {
+      "category": "Statistical Inference",
+      "question": "What is selection bias?",
+      "answer": "Selection bias occurs when the sample is not representative of the population, often due to non-random sampling or attrition. This leads to incorrect conclusions. Examples include sampling bias, time-interval bias, and data attrition."
+    }
+  ,  
+  
+    {
+      "category": "Programming",
+      "question": "Write a function to calculate all possible assignment vectors of 2n users, where n users are assigned to group 0 (control), and n users are assigned to group 1 (treatment).",
+      "answer": "Use recursion or itertools.combinations to generate all binary vectors with exactly n zeros and n ones. Example: use itertools.permutations of [0]*n + [1]*n."
+    },
+    {
+      "category": "Programming",
+      "question": "Given a list of tweets, determine the top 10 most used hashtags.",
+      "answer": "Extract all hashtags using regex (e.g., '#\\w+'), count them with a dictionary or Counter, and return the top 10 by frequency."
+    },
+    {
+      "category": "Programming",
+      "question": "Program an algorithm to find the best approximate solution to the knapsack problem in a given time.",
+      "answer": "Use a greedy approach: sort items by value-to-weight ratio and add them until no capacity remains. For better approximations, use dynamic programming with pruning or a genetic algorithm if time allows."
+    },
+    {
+      "category": "Programming",
+      "question": "Program an algorithm to find the best approximate solution to the travelling salesman problem in a given time.",
+      "answer": "Use heuristic methods like nearest neighbor, 2-opt, or simulated annealing. Start at a city, repeatedly visit the nearest unvisited city, and improve iteratively."
+    },
+    {
+      "category": "Programming",
+      "question": "You have a stream of data coming in of size n, but you don’t know what n is ahead of time. Write an algorithm that will take a random sample of k elements. Can you write one that takes O(k) space?",
+      "answer": "Yes — use Reservoir Sampling: keep the first k elements, then for each new element i > k, replace an existing element with probability k/i. This guarantees equal probability for all elements."
+    },
+    {
+      "category": "Programming",
+      "question": "Write an algorithm that can calculate the square root of a number.",
+      "answer": "Use Newton-Raphson (iterative) method: x₁ = (x₀ + n/x₀) / 2 until convergence. Example: while |x² - n| > ε, update x = (x + n/x) / 2."
+    },
+    {
+      "category": "Programming",
+      "question": "Given a list of numbers, can you return the outliers?",
+      "answer": "Use the IQR method: outliers are values < Q1 - 1.5×IQR or > Q3 + 1.5×IQR. Alternatively, z-score > 3 for normal distributions."
+    },
+    {
+      "category": "Programming",
+      "question": "When can parallelism make your algorithms run faster? When could it make them slower?",
+      "answer": "Parallelism speeds up tasks when computation dominates communication (e.g., large matrix ops, training ensembles). It slows down when synchronization or data transfer overhead exceeds computation time (e.g., small or dependent tasks)."
+    },
+    {
+      "category": "Programming",
+      "question": "What are the different types of joins? What are the differences between them?",
+      "answer": "INNER JOIN: records with matches in both tables. LEFT JOIN: all left + matched right. RIGHT JOIN: all right + matched left. FULL JOIN: all records when a match exists in either table."
+    },
+    {
+      "category": "Programming",
+      "question": "Why might a join on a subquery be slow? How might you speed it up?",
+      "answer": "Subqueries often require temporary tables and redundant scans. Rewrite using JOINs with proper indexes, or use CTEs for efficiency."
+    },
+    {
+      "category": "Programming",
+      "question": "Describe the difference between primary keys and foreign keys in a SQL database.",
+      "answer": "Primary key uniquely identifies each record in a table. Foreign key establishes a relationship by referencing a primary key in another table."
+    },
+    {
+      "category": "Programming",
+      "question": "Given a COURSES table with columns course_id and course_name, a FACULTY table with columns faculty_id and faculty_name, and a COURSE_FACULTY table with columns faculty_id and course_id, how would you return a list of faculty who teach a course given the name of a course?",
+      "answer": "SELECT f.faculty_name FROM FACULTY f JOIN COURSE_FACULTY cf ON f.faculty_id = cf.faculty_id JOIN COURSES c ON cf.course_id = c.course_id WHERE c.course_name = 'course_name';"
+    },
+    {
+      "category": "Programming",
+      "question": "Given an IMPRESSIONS table with ad_id, click (an indicator that the ad was clicked), and date, write a SQL query that will tell me the click-through rate of each ad by month.",
+      "answer": "SELECT ad_id, DATE_TRUNC('month', date) AS month, AVG(click)::FLOAT AS CTR FROM IMPRESSIONS GROUP BY ad_id, month;"
+    },
+    {
+      "category": "Programming",
+      "question": "Write a query that returns the name of each department and a count of the number of employees in each.",
+      "answer": "SELECT d.Dept_Name, COUNT(e.Emp_ID) AS Employee_Count FROM DEPTS d JOIN EMPLOYEE_DEPT ed ON d.Dept_ID = ed.Dept_ID GROUP BY d.Dept_Name;"
+    }
+  ,  
+  
+    {
+      "category": "Data Analysis",
+      "question": "(Given a Dataset) Analyze this dataset and tell me what you can learn from it.",
+      "answer": "Start with exploratory data analysis: inspect missing values, summary statistics, correlations, and visualizations. Identify key trends, anomalies, and potential predictors before modeling."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "What is R²? What are some other metrics that could be better than R² and why?",
+      "answer": "R² measures the proportion of variance in the dependent variable explained by the model. It always increases with more predictors, so use adjusted R² to account for degrees of freedom. For prediction, use RMSE, MAE, or cross-validated error instead."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "What is the curse of dimensionality?",
+      "answer": "As the number of features grows, data becomes sparse and distances between points become less meaningful. This hurts clustering, prediction, and generalization. Dimensionality reduction (e.g., PCA) or feature selection helps mitigate this."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "Is more data always better?",
+      "answer": "Not always. More data helps only if it’s high-quality and relevant. Biased or noisy data can harm models. Also, more data increases storage, compute cost, and time. Focus on data quality and feature engineering first."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "What are advantages of plotting your data before performing analysis?",
+      "answer": "1) Identify errors or outliers (e.g., unrealistic values). 2) Detect skewness or multimodality. 3) Understand relationships and trends. Visualization guides better model and feature choices."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "How can you make sure that you don’t analyze something that ends up meaningless?",
+      "answer": "Use structured exploratory data analysis to form testable hypotheses. Avoid over-interpreting random patterns. Validate findings through cross-validation or out-of-sample testing before drawing conclusions."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "What is the role of trial and error in data analysis? What is the role of making a hypothesis before diving in?",
+      "answer": "Trial and error helps discover unexpected insights, while hypotheses give focus and prevent overfitting. Combine both — iterate between exploring patterns and testing hypotheses scientifically."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "How can you determine which features are the most important in your model?",
+      "answer": "Use feature importance from tree-based models (e.g., Random Forest, XGBoost), permutation importance, or regression coefficients. Also test forward or backward feature selection."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "How do you deal with some of your predictors being missing?",
+      "answer": "Options: 1) Drop rows if missingness is random and limited. 2) Impute with mean, median, or model-based predictions. 3) Use algorithms like Random Forests that handle missing values natively."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "You have several variables positively correlated with your response, but one predictor has a negative weight in regression. What could be the issue?",
+      "answer": "Likely multicollinearity — predictors are highly correlated, leading to unstable coefficients. Use variance inflation factor (VIF), drop correlated variables, or apply PCA or regularization."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "Let’s say you’re given an unfeasible number of predictors in a predictive modeling task. What are some ways to make the prediction more feasible?",
+      "answer": "Use dimensionality reduction like PCA, autoencoders, or feature selection (filter or wrapper methods) to reduce feature space before modeling."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "Now you have a feasible number of predictors, but you’re fairly sure that you don’t need all of them. How would you perform feature selection?",
+      "answer": "Apply Lasso (L1) or Elastic Net regularization, univariate statistical tests, or recursive feature elimination (RFE). Keep only features that improve cross-validated performance."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "Your linear regression didn’t run and reports infinite solutions for coefficients. What could be wrong?",
+      "answer": "Perfect multicollinearity or more predictors than observations (p > n). Remove redundant features or use regularization (Ridge/Lasso)."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "You run your regression on subsets of data and see that the beta for a variable varies wildly. What could be the issue?",
+      "answer": "The dataset is heterogeneous — relationships differ across subgroups. Consider stratifying or clustering data and fitting separate models per group."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "What is the main idea behind ensemble learning?",
+      "answer": "Combine multiple weak models to form a stronger one. Bagging reduces variance, boosting reduces bias, and stacking blends diverse models using meta-learning. Usually performs better than a single model."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "Given Wi-Fi usage data in your office, how would you determine which rooms are under- or over-utilized?",
+      "answer": "Aggregate connection counts per room and normalize by capacity or area. Rooms with consistently high utilization are overused; those with low normalized usage are underused."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "How could you use GPS data from a car to determine driver quality?",
+      "answer": "Analyze driving patterns — harsh braking, acceleration, cornering, speed limit violations, and route smoothness. Build a score combining these metrics to represent driving quality."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "Given position data of NBA players during games, how would you evaluate defensive ability?",
+      "answer": "Track distances between defenders and offensive players. Measure how often opponents miss shots when defended and quantify defensive impact using spatial and event data."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "Given location data of golf balls in games, how would you build a model that can advise golfers where to aim?",
+      "answer": "Model shot outcomes based on location, distance, slope, and wind. Use regression or reinforcement learning to predict optimal aim points maximizing expected score."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "You have 5000 people ranking 10 sushis by saltiness. How would you aggregate to estimate true saltiness ranks?",
+      "answer": "Use the median or average rank per sushi to estimate consensus. Alternatively, use a ranking aggregation method like Borda count or Bradley-Terry model for more accuracy."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "Given data on congressional bills and which representatives co-sponsored them, how would you find similar representatives or identify political leanings?",
+      "answer": "Compute cosine similarity or correlation between representatives’ vote vectors. Cluster similar voting patterns to identify bipartisan, liberal, or conservative tendencies."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "How would you come up with an algorithm to detect plagiarism in online content?",
+      "answer": "Convert text to token sets or embeddings (e.g., TF-IDF, cosine similarity, or n-gram fingerprints). Flag documents with high similarity scores as potential plagiarism."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "You have customer purchase data at a grocery store. How would you cluster customers into groups and determine the number of clusters?",
+      "answer": "Use K-Means or hierarchical clustering on normalized purchase features. Choose k via the elbow method or silhouette score for best separation."
+    },
+    {
+      "category": "Data Analysis",
+      "question": "You're building a music recommendation engine at Spotify. How would you approach it?",
+      "answer": "Use collaborative filtering to recommend songs based on similar users’ preferences, or content-based filtering using audio features and metadata."
+    }
+    
+]

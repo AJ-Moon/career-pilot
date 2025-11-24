@@ -1,0 +1,52 @@
+# Core
+fastapi==0.116.2
+uvicorn==0.36.0
+starlette==0.48.0
+python-dotenv==1.1.1
+openai==1.108.1
+clerk-backend-api
+
+# MongoDB
+motor==3.6.0
+pymongo==4.9.2
+
+
+# Authentication & Security
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.3.0
+bcrypt==4.2.1
+
+# Email
+fastapi-mail==1.4.1
+email-validator==2.2.0
+
+# Pydantic
+pydantic==2.11.9
+pydantic_core==2.33.2
+pydantic-settings==2.7.1
+annotated-types==0.7.0
+typing-extensions==4.15.0
+typing-inspection==0.4.1
+
+# Async & HTTP
+anyio==4.10.0
+httpx==0.28.1
+httpcore==1.0.9
+h11==0.16.0
+sniffio==1.3.1
+requests==2.32.3  
+
+# Misc
+click==8.1.8
+certifi==2025.8.3
+distro==1.9.0
+exceptiongroup==1.3.0
+idna==3.10
+jiter==0.11.0
+tqdm==4.67.1
+
+# File Upload & PDF Parsing
+python-multipart==0.0.18
+PyPDF2==3.0.1
+pypdfium2==4.30.0
+aiofiles>=23.1.0
