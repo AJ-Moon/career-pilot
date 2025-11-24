@@ -117,7 +117,7 @@ export default function PracticeLibrary() {
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
   const pageSize = 20;
-  const BACKEND_URL = "http://localhost:5005";
+  const BACKEND_URL = "https://career-pilot-s24d.onrender.com";
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
