@@ -18,7 +18,7 @@ export default function App() {
   const { user } = useUser();
   const [userRole, setUserRole] = useState<string | null>(null);
   const [selectedDomain, setSelectedDomain] = useState<string>("");
-  const BACKEND_URL = "http://localhost:5005";
+  const BACKEND_URL = "https://career-pilot-s24d.onrender.com";
 
   // Sync new user if coming from signup URL
   useEffect(() => {
