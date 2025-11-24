@@ -23,7 +23,7 @@ export function JobPositionsGrid() {
     const fetchJobs = async () => {
       setLoading(true);
       try {
-        const res = await fetch("https://career-pilot-s24d.onrender.com/api/jobs");
+        const res = await fetch("https://career-pilot-s24d.onrender.com/api/jobs/");
         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         const data = await res.json();
 
@@ -59,7 +59,7 @@ export function JobPositionsGrid() {
 
   const handleCreateJob = async () => {
     try {
-      const res = await fetch("https://career-pilot-s24d.onrender.com/api/jobs", {
+      const res = await fetch("https://career-pilot-s24d.onrender.com/api/jobs/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({}),
