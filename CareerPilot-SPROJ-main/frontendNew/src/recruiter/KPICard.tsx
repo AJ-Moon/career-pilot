@@ -1,5 +1,5 @@
 import { TrendingUp, TrendingDown } from 'lucide-react';
-
+import { JSX } from "react";
 interface KPICardProps {
   title: string;
   value: string;
