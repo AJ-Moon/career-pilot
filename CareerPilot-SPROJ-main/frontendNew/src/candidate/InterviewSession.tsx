@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { Progress } from "../components/ui/progress";
@@ -14,7 +14,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import FacialAnalysis from "../FacialAnalysis";
-import aiAvatar from "../assets/avatar.webp"; // ensure this exists
+import aiAvatar from "../assets/avatar.webp"; // Make sure this exists
 
 interface InterviewSessionProps {
   onComplete: () => void;
@@ -36,22 +36,28 @@ export default function InterviewSession({
   const [bodyLanguage, setBodyLanguage] = useState("Good");
   const [eyeContact, setEyeContact] = useState("Excellent");
 
-  // logs collected from facial analysis updates
+  // Logs collected from facial analysis updates
   const [logs, setLogs] = useState<string[]>([]);
+  const logEndRef = useRef<HTMLDivElement | null>(null);
 
-  // push a log (keep last 8)
+  // Push a log (keep last 20)
   const pushLog = (msg: string) => {
     setLogs((prev) => {
       const next = [...prev, `${new Date().toLocaleTimeString()} — ${msg}`];
-      return next.slice(-8);
+      return next.slice(-20);
     });
   };
 
-  // callback from FacialAnalysis (emotion + attention)
+  // Auto-scroll logs
+  useEffect(() => {
+    logEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [logs]);
+
+  // Callback from FacialAnalysis (emotion + attention)
   const handleAnalysisUpdate = (data: { emotion: string; attention: string }) => {
     const { emotion, attention } = data;
 
-    // map to metrics
+    // Map to metrics
     setEyeContact(attention === "Focused" ? "Excellent" : "Poor");
 
     if (emotion === "nervous" || emotion === "sad") {
@@ -64,27 +70,29 @@ export default function InterviewSession({
       setBodyLanguage("Average");
     }
 
-    // add readable log
+    // Add readable log
     pushLog(`Emotion: ${emotion}, Attention: ${attention}`);
   };
 
-  // mic toggle
+  // Mic toggle
   const handleMicToggle = () => setIsMuted((m) => !m);
 
-  // sending typed answer (keeps simple)
+  // Sending typed answer
   const handleSendText = () => {
     if (!textResponse.trim()) return;
-    pushLog(`Typed answer sent: "${textResponse.slice(0, 60)}${textResponse.length > 60 ? "..." : ""}"`);
+    pushLog(
+      `Typed answer sent: "${textResponse.slice(0, 60)}${
+        textResponse.length > 60 ? "..." : ""
+      }"`
+    );
     setTextResponse("");
     setShowTextInput(false);
-    // simulate confidence bump
     setConfidenceLevel((p) => Math.min(95, p + 2));
   };
 
-  // small effect to show initial log
+  // Show initial log
   useEffect(() => {
     pushLog("Interview started");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -112,11 +120,10 @@ export default function InterviewSession({
       {/* Main */}
       <main className="p-6 max-w-[1300px] mx-auto">
         <div className="grid grid-cols-12 gap-6">
-
-          {/* Center area: two equal tiles (candidate + AI) occupying 8/12 */}
+          {/* Center area: two equal tiles */}
           <section className="col-span-12 lg:col-span-8 space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              {/* Candidate tile (FacialAnalysis renders video inside) */}
+              {/* Candidate tile */}
               <div className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col">
                 <div className="p-3 border-b flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -132,7 +139,6 @@ export default function InterviewSession({
                 </div>
 
                 <div className="p-4 flex-1 flex items-center justify-center">
-                  {/* FacialAnalysis component will show the camera & internal status */}
                   <div className="w-full h-64">
                     <FacialAnalysis onAnalysisUpdate={handleAnalysisUpdate} />
                   </div>
@@ -159,7 +165,7 @@ export default function InterviewSession({
               </div>
             </div>
 
-            {/* Controls row */}
+            {/* Controls */}
             <div className="bg-white rounded-xl shadow-sm p-3 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Button
@@ -178,7 +184,9 @@ export default function InterviewSession({
                 </Button>
               </div>
 
-              <div className="text-sm text-muted-foreground">Recording: <span className="font-medium">ON</span></div>
+              <div className="text-sm text-muted-foreground">
+                Recording: <span className="font-medium">ON</span>
+              </div>
             </div>
 
             {/* Optional text input overlay */}
@@ -190,14 +198,16 @@ export default function InterviewSession({
                   onChange={(e) => setTextResponse(e.target.value)}
                 />
                 <div className="flex justify-end gap-2 mt-3">
-                  <Button variant="outline" onClick={() => setShowTextInput(false)}>Cancel</Button>
+                  <Button variant="outline" onClick={() => setShowTextInput(false)}>
+                    Cancel
+                  </Button>
                   <Button onClick={handleSendText}>Send</Button>
                 </div>
               </div>
             )}
           </section>
 
-          {/* Right sidebar: metrics + logs (4/12) */}
+          {/* Right sidebar: metrics + logs */}
           <aside className="col-span-12 lg:col-span-4 space-y-4">
             <Card>
               <CardContent className="p-4">
@@ -242,12 +252,24 @@ export default function InterviewSession({
                       </div>
                     ))
                   )}
+                  <div ref={logEndRef} />
                 </div>
                 <div className="flex gap-2 mt-3">
-                  <Button variant="outline" size="sm" onClick={() => { setLogs([]); pushLog("Logs cleared"); }}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setLogs([]);
+                      pushLog("Logs cleared");
+                    }}
+                  >
                     Clear
                   </Button>
-                  <Button variant="ghost" size="sm" onClick={() => pushLog("Manual note: review answer")}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => pushLog("Manual note: review answer")}
+                  >
                     Add Note
                   </Button>
                 </div>
@@ -258,8 +280,12 @@ export default function InterviewSession({
               <CardContent className="p-4">
                 <div className="font-medium mb-2">Session Controls</div>
                 <div className="flex flex-col gap-2">
-                  <Button variant="outline" onClick={onComplete}>Finish & Review</Button>
-                  <Button variant="destructive" onClick={onEndInterview}>Terminate</Button>
+                  <Button variant="outline" onClick={onComplete}>
+                    Finish & Review
+                  </Button>
+                  <Button variant="destructive" onClick={onEndInterview}>
+                    Terminate
+                  </Button>
                 </div>
               </CardContent>
             </Card>
