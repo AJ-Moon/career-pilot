@@ -1,21 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '../components/ui/button';
-import { Card, CardContent } from '../components/ui/card';
-import { Progress } from '../components/ui/progress';
-import { Badge } from '../components/ui/badge';
-import { Textarea } from '../components/ui/textarea';
-import { 
-  Mic, 
-  MicOff, 
-  Type, 
-  RotateCcw, 
-  Gauge, 
-  Eye, 
-  Volume2,
+import React, { useState, useEffect } from "react";
+import { Button } from "../components/ui/button";
+import { Card, CardContent } from "../components/ui/card";
+import { Progress } from "../components/ui/progress";
+import { Badge } from "../components/ui/badge";
+import { Textarea } from "../components/ui/textarea";
+import {
+  Mic,
+  MicOff,
+  Gauge,
   Settings,
   Home,
-  Square
-} from 'lucide-react';
+  Square,
+  MessageSquare,
+} from "lucide-react";
+import FacialAnalysis from "../FacialAnalysis";
+import aiAvatar from "../assets/avatar.webp"; // ensure this exists
 
 interface InterviewSessionProps {
   onComplete: () => void;
@@ -24,379 +23,249 @@ interface InterviewSessionProps {
   domain: string;
 }
 
-interface Message {
-  id: string;
-  sender: 'ai' | 'user';
-  content: string;
-  timestamp: Date;
-}
-
-const mockQuestions = [
-  "Tell me about yourself and your background in software engineering.",
-  "Describe a challenging project you've worked on recently.",
-  "How do you handle debugging complex issues?",
-  "Walk me through your problem-solving process.",
-  "What's your experience with version control systems?",
-];
-
-export default function InterviewSession({ onComplete, onEndInterview, onReturnHome, domain }: InterviewSessionProps) {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      sender: 'ai',
-      content: `Hello! I'm excited to conduct your ${domain} interview today. Let's start with an introduction. ${mockQuestions[0]}`,
-      timestamp: new Date(),
-    }
-  ]);
-  
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [isRecording, setIsRecording] = useState(false);
+export default function InterviewSession({
+  onComplete,
+  onEndInterview,
+  onReturnHome,
+  domain,
+}: InterviewSessionProps) {
+  const [isMuted, setIsMuted] = useState(false);
   const [showTextInput, setShowTextInput] = useState(false);
-  const [textResponse, setTextResponse] = useState('');
+  const [textResponse, setTextResponse] = useState("");
   const [confidenceLevel, setConfidenceLevel] = useState(75);
-  const [currentTopic, setCurrentTopic] = useState('Introduction');
-  const [sessionProgress, setSessionProgress] = useState(20);
-  const [isListening, setIsListening] = useState(false);
-  const [liveTranscription, setLiveTranscription] = useState('');
+  const [bodyLanguage, setBodyLanguage] = useState("Good");
+  const [eyeContact, setEyeContact] = useState("Excellent");
 
-  // Simulate live transcription when recording
-  useEffect(() => {
-    if (isRecording) {
-      const transcriptionTexts = [
-        "So, I'm a software engineer with about...",
-        "...five years of experience primarily in...",
-        "...web development using React and Node.js...",
-        "...I've worked on several large-scale applications..."
-      ];
-      
-      let index = 0;
-      const interval = setInterval(() => {
-        if (index < transcriptionTexts.length) {
-          setLiveTranscription(transcriptionTexts[index]);
-          index++;
-        } else {
-          clearInterval(interval);
-        }
-      }, 1500);
+  // logs collected from facial analysis updates
+  const [logs, setLogs] = useState<string[]>([]);
 
-      return () => clearInterval(interval);
+  // push a log (keep last 8)
+  const pushLog = (msg: string) => {
+    setLogs((prev) => {
+      const next = [...prev, `${new Date().toLocaleTimeString()} — ${msg}`];
+      return next.slice(-8);
+    });
+  };
+
+  // callback from FacialAnalysis (emotion + attention)
+  const handleAnalysisUpdate = (data: { emotion: string; attention: string }) => {
+    const { emotion, attention } = data;
+
+    // map to metrics
+    setEyeContact(attention === "Focused" ? "Excellent" : "Poor");
+
+    if (emotion === "nervous" || emotion === "sad") {
+      setBodyLanguage("Needs Improvement");
+      setConfidenceLevel((p) => Math.max(30, p - 3));
+    } else if (emotion === "happy" || emotion === "neutral") {
+      setBodyLanguage("Good");
+      setConfidenceLevel((p) => Math.min(95, p + 2));
     } else {
-      setLiveTranscription('');
+      setBodyLanguage("Average");
     }
-  }, [isRecording]);
 
-  // Simulate confidence updates
+    // add readable log
+    pushLog(`Emotion: ${emotion}, Attention: ${attention}`);
+  };
+
+  // mic toggle
+  const handleMicToggle = () => setIsMuted((m) => !m);
+
+  // sending typed answer (keeps simple)
+  const handleSendText = () => {
+    if (!textResponse.trim()) return;
+    pushLog(`Typed answer sent: "${textResponse.slice(0, 60)}${textResponse.length > 60 ? "..." : ""}"`);
+    setTextResponse("");
+    setShowTextInput(false);
+    // simulate confidence bump
+    setConfidenceLevel((p) => Math.min(95, p + 2));
+  };
+
+  // small effect to show initial log
   useEffect(() => {
-    const interval = setInterval(() => {
-      setConfidenceLevel(prev => {
-        const change = Math.random() > 0.5 ? 2 : -2;
-        return Math.max(30, Math.min(95, prev + change));
-      });
-    }, 3000);
-
-    return () => clearInterval(interval);
+    pushLog("Interview started");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleMicToggle = () => {
-    setIsRecording(!isRecording);
-    setIsListening(!isListening);
-  };
-
-  const handleSendText = () => {
-    if (textResponse.trim()) {
-      const userMessage: Message = {
-        id: Date.now().toString(),
-        sender: 'user',
-        content: textResponse,
-        timestamp: new Date(),
-      };
-
-      setMessages(prev => [...prev, userMessage]);
-      setTextResponse('');
-      setShowTextInput(false);
-
-      // Simulate AI response
-      setTimeout(() => {
-        const nextIndex = currentQuestionIndex + 1;
-        if (nextIndex < mockQuestions.length) {
-          const aiMessage: Message = {
-            id: (Date.now() + 1).toString(),
-            sender: 'ai',
-            content: `Great answer! Let's move on. ${mockQuestions[nextIndex]}`,
-            timestamp: new Date(),
-          };
-          setMessages(prev => [...prev, aiMessage]);
-          setCurrentQuestionIndex(nextIndex);
-          setSessionProgress(prev => Math.min(100, prev + 20));
-          setCurrentTopic(nextIndex === 1 ? 'Project Experience' : nextIndex === 2 ? 'Problem Solving' : 'Technical Skills');
-        } else {
-          // Interview complete
-          setTimeout(() => onComplete(), 2000);
-        }
-      }, 2000);
-    }
-  };
-
-  const handleEndInterview = () => {
-    // You could add a confirmation dialog here if needed
-    onEndInterview();
-  };
-
-  const breadcrumbSteps = [
-    'Introduction',
-    'Project Experience', 
-    'Problem Solving',
-    'Technical Skills',
-    'Final Questions'
-  ];
-
   return (
-    <div className="h-screen flex flex-col bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
       {/* Header */}
-      <div className="border-b bg-white px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-medium">Interview Session</h1>
-            <div className="flex items-center gap-2 mt-1">
-              <Badge variant="outline">{domain}</Badge>
-              <Badge variant="secondary">{currentTopic}</Badge>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <div className="text-sm text-muted-foreground">
-              Progress: {sessionProgress}%
-            </div>
-            <Progress value={sessionProgress} className="w-32" />
-            
-            {/* Interview Control Buttons */}
-            <div className="flex items-center gap-2">
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={onReturnHome}
-                className="flex items-center gap-2"
-              >
-                <Home className="w-4 h-4" />
-                Return Home
-              </Button>
-              <Button 
-                variant="destructive" 
-                size="sm"
-                onClick={handleEndInterview}
-                className="flex items-center gap-2"
-              >
-                <Square className="w-4 h-4" />
-                End Interview
-              </Button>
-            </div>
-            
-            <Button variant="outline" size="sm">
-              <Settings className="w-4 h-4 mr-2" />
-              Adjust Difficulty
-            </Button>
+      <header className="flex items-center justify-between p-4 border-b bg-white/60 backdrop-blur-sm">
+        <div>
+          <h2 className="text-xl font-semibold">Live Interview</h2>
+          <div className="flex gap-2 mt-1 items-center">
+            <Badge variant="outline">{domain || "Software Engineering"}</Badge>
+            <div className="text-sm text-muted-foreground">1:1 Mock Interview</div>
           </div>
         </div>
 
-        {/* Progress Breadcrumb */}
-        <div className="flex items-center gap-2 mt-3">
-          {breadcrumbSteps.map((step, index) => (
-            <React.Fragment key={step}>
-              <div className={`px-3 py-1 rounded-full text-xs ${
-                index <= currentQuestionIndex 
-                  ? 'bg-primary text-primary-foreground' 
-                  : 'bg-muted text-muted-foreground'
-              }`}>
-                {step}
-              </div>
-              {index < breadcrumbSteps.length - 1 && (
-                <div className="w-2 h-px bg-border" />
-              )}
-            </React.Fragment>
-          ))}
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="sm" onClick={onReturnHome}>
+            <Home className="w-4 h-4 mr-2" /> Dashboard
+          </Button>
+          <Button variant="destructive" size="sm" onClick={onEndInterview}>
+            <Square className="w-4 h-4 mr-2" /> End
+          </Button>
         </div>
-      </div>
+      </header>
 
-      {/* Main Content */}
-      <div className="flex-1 flex">
-        {/* Left Side - Chat */}
-        <div className="flex-1 flex flex-col">
-          {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4">
-            {messages.map((message) => (
-              <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-3xl p-4 rounded-lg ${
-                  message.sender === 'ai' 
-                    ? 'bg-blue-50 border border-blue-200' 
-                    : 'bg-primary text-primary-foreground'
-                }`}>
-                  <div className="flex items-start gap-3">
-                    {message.sender === 'ai' && (
-                      <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-medium">
-                        AI
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <p>{message.content}</p>
-                      <p className={`text-xs mt-2 ${
-                        message.sender === 'ai' ? 'text-blue-600' : 'text-primary-foreground/70'
-                      }`}>
-                        {message.timestamp.toLocaleTimeString()}
-                      </p>
+      {/* Main */}
+      <main className="p-6 max-w-[1300px] mx-auto">
+        <div className="grid grid-cols-12 gap-6">
+
+          {/* Center area: two equal tiles (candidate + AI) occupying 8/12 */}
+          <section className="col-span-12 lg:col-span-8 space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              {/* Candidate tile (FacialAnalysis renders video inside) */}
+              <div className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col">
+                <div className="p-3 border-b flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-sm font-medium">
+                      You
                     </div>
-                    {message.sender === 'ai' && (
-                      <Button variant="ghost" size="sm">
-                        <Volume2 className="w-4 h-4" />
-                      </Button>
-                    )}
+                    <div>
+                      <div className="font-medium">Candidate</div>
+                      <div className="text-xs text-muted-foreground">Live video</div>
+                    </div>
+                  </div>
+                  <div className="text-sm text-muted-foreground">Live</div>
+                </div>
+
+                <div className="p-4 flex-1 flex items-center justify-center">
+                  {/* FacialAnalysis component will show the camera & internal status */}
+                  <div className="w-full h-64">
+                    <FacialAnalysis onAnalysisUpdate={handleAnalysisUpdate} />
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
 
-          {/* Input Area */}
-          <div className="border-t p-6">
-            {showTextInput ? (
-              <div className="space-y-3">
-                <Textarea
-                  placeholder="Type your answer here..."
-                  value={textResponse}
-                  onChange={(e) => setTextResponse(e.target.value)}
-                  className="min-h-[100px]"
+              {/* AI interviewer tile */}
+              <div className="bg-white rounded-xl shadow-md flex flex-col items-center justify-center p-4">
+                <img
+                  src={aiAvatar}
+                  alt="AI Interviewer"
+                  className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-sm"
                 />
-                <div className="flex gap-2">
-                  <Button onClick={handleSendText} disabled={!textResponse.trim()}>
-                    Send Answer
-                  </Button>
-                  <Button variant="outline" onClick={() => setShowTextInput(false)}>
-                    Cancel
-                  </Button>
+                <div className="mt-3 text-lg font-semibold">AI Interviewer</div>
+                <div className="mt-2 text-sm text-muted-foreground text-center px-4">
+                  Ask the candidate questions and evaluate answers.
+                </div>
+
+                <div className="mt-4 w-full px-4">
+                  <div className="bg-indigo-50 rounded p-3 text-sm text-indigo-700 text-center">
+                    "Tell me about a challenging project you led."
+                  </div>
                 </div>
               </div>
-            ) : (
-              <div className="flex items-center justify-center gap-4">
+            </div>
+
+            {/* Controls row */}
+            <div className="bg-white rounded-xl shadow-sm p-3 flex items-center justify-between">
+              <div className="flex items-center gap-3">
                 <Button
                   size="lg"
-                  variant={isRecording ? "destructive" : "default"}
+                  variant={isMuted ? "destructive" : "default"}
                   onClick={handleMicToggle}
-                  className="flex items-center gap-2 px-8"
+                  className="flex items-center gap-2 px-6"
                 >
-                  {isRecording ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-                  {isRecording ? 'Stop Recording' : 'Start Speaking'}
+                  {isMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                  {isMuted ? "Muted" : "Unmuted"}
                 </Button>
-                
-                <div className="text-sm text-muted-foreground">or</div>
-                
-                <Button
-                  variant="outline"
-                  onClick={() => setShowTextInput(true)}
-                  className="flex items-center gap-2"
-                >
-                  <Type className="w-4 h-4" />
+
+                <Button variant="outline" onClick={() => setShowTextInput((s) => !s)}>
+                  <MessageSquare className="w-4 h-4 mr-2" />
                   Type Answer
                 </Button>
               </div>
-            )}
 
-            {/* Live Transcription */}
-            {isRecording && liveTranscription && (
-              <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                  <span className="text-sm font-medium text-green-700">Live Transcription</span>
+              <div className="text-sm text-muted-foreground">Recording: <span className="font-medium">ON</span></div>
+            </div>
+
+            {/* Optional text input overlay */}
+            {showTextInput && (
+              <div className="bg-white rounded-xl shadow-md p-4 mt-3">
+                <Textarea
+                  placeholder="Type your answer..."
+                  value={textResponse}
+                  onChange={(e) => setTextResponse(e.target.value)}
+                />
+                <div className="flex justify-end gap-2 mt-3">
+                  <Button variant="outline" onClick={() => setShowTextInput(false)}>Cancel</Button>
+                  <Button onClick={handleSendText}>Send</Button>
                 </div>
-                <p className="text-sm text-green-800">{liveTranscription}</p>
               </div>
             )}
-          </div>
+          </section>
+
+          {/* Right sidebar: metrics + logs (4/12) */}
+          <aside className="col-span-12 lg:col-span-4 space-y-4">
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <Gauge className="w-5 h-5 text-primary" />
+                    <div className="font-medium">Confidence</div>
+                  </div>
+                  <div className="text-sm font-medium">{confidenceLevel}%</div>
+                </div>
+
+                <Progress value={confidenceLevel} className="h-3 mb-3" />
+
+                <div className="grid grid-cols-1 gap-2 text-sm">
+                  <div className="p-2 rounded bg-slate-50">
+                    <div className="text-xs text-muted-foreground">Body Language</div>
+                    <div className="font-medium">{bodyLanguage}</div>
+                  </div>
+                  <div className="p-2 rounded bg-slate-50">
+                    <div className="text-xs text-muted-foreground">Eye Contact</div>
+                    <div className="font-medium">{eyeContact}</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Live logs */}
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="font-medium">Live Logs</div>
+                  <div className="text-xs text-muted-foreground">last events</div>
+                </div>
+                <div className="bg-gray-50 rounded p-2 text-sm h-48 overflow-auto">
+                  {logs.length === 0 ? (
+                    <div className="text-muted-foreground text-sm">No logs yet</div>
+                  ) : (
+                    logs.slice().reverse().map((l, idx) => (
+                      <div key={idx} className="py-1 border-b last:border-b-0">
+                        <div className="text-xs text-muted-foreground">{l.split(" — ")[0]}</div>
+                        <div>{l.split(" — ")[1]}</div>
+                      </div>
+                    ))
+                  )}
+                </div>
+                <div className="flex gap-2 mt-3">
+                  <Button variant="outline" size="sm" onClick={() => { setLogs([]); pushLog("Logs cleared"); }}>
+                    Clear
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={() => pushLog("Manual note: review answer")}>
+                    Add Note
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="font-medium mb-2">Session Controls</div>
+                <div className="flex flex-col gap-2">
+                  <Button variant="outline" onClick={onComplete}>Finish & Review</Button>
+                  <Button variant="destructive" onClick={onEndInterview}>Terminate</Button>
+                </div>
+              </CardContent>
+            </Card>
+          </aside>
         </div>
-
-        {/* Right Side - Video & Metrics */}
-        <div className="w-80 border-l bg-muted/30 p-6 space-y-6">
-          {/* Webcam */}
-          <Card>
-            <CardContent className="p-4">
-              <div className="aspect-video bg-gray-900 rounded-lg relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20" />
-                <div className="absolute bottom-4 left-4">
-                  <Badge variant="secondary" className="bg-black/50 text-white">
-                    <Eye className="w-3 h-3 mr-1" />
-                    Recording
-                  </Badge>
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-white/60 text-center">
-                    <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <Eye className="w-8 h-8" />
-                    </div>
-                    <p className="text-sm">Camera Active</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Confidence Meter */}
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3 mb-3">
-                <Gauge className="w-5 h-5 text-primary" />
-                <h3 className="font-medium">Confidence Level</h3>
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-sm">Current</span>
-                  <span className="text-sm font-medium">{confidenceLevel}%</span>
-                </div>
-                <Progress value={confidenceLevel} className="h-3" />
-                
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="text-center p-2 bg-blue-50 rounded">
-                    <div className="font-medium">Body Language</div>
-                    <div className="text-blue-600">Good</div>
-                  </div>
-                  <div className="text-center p-2 bg-green-50 rounded">
-                    <div className="font-medium">Eye Contact</div>
-                    <div className="text-green-600">Excellent</div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Current Topic */}
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="font-medium mb-2">Current Focus</h3>
-              <div className="space-y-2">
-                <Badge variant="outline" className="w-full justify-center py-2">
-                  {domain}
-                </Badge>
-                <div className="text-center">
-                  <div className="text-sm text-muted-foreground">Topic</div>
-                  <div className="font-medium">{currentTopic}</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Quick Actions */}
-          <Card>
-            <CardContent className="p-4 space-y-2">
-              <Button variant="outline" size="sm" className="w-full">
-                <RotateCcw className="w-4 h-4 mr-2" />
-                Repeat Question
-              </Button>
-              <Button variant="outline" size="sm" className="w-full">
-                <Settings className="w-4 h-4 mr-2" />
-                Adjust Pace
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+      </main>
     </div>
   );
 }

@@ -1,9 +1,12 @@
-const BASE_URL = 'https://career-pilot-s24d.onrender.com';
+const BASE_URL = "http://localhost:5005";
 
 export async function apiFetch(endpoint: string, options: RequestInit = {}) {
+  const isFormData = options.body instanceof FormData;
+
   const res = await fetch(`${BASE_URL}${endpoint}`, {
     ...options,
     headers: {
+      ...(isFormData ? {} : { "Content-Type": "application/json" }), 
       ...(options.headers || {}),
     },
   });
@@ -15,4 +18,3 @@ export async function apiFetch(endpoint: string, options: RequestInit = {}) {
 
   return await res.json();
 }
-

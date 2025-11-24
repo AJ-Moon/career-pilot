@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useAuth } from "@clerk/clerk-react";
 
-export const BACKEND_URL = "https://career-pilot-s24d.onrender.com";
+export const BACKEND_URL = "http://localhost:5005";
 
 // Wrapper hook for authorized calls
 export function useApi() {
