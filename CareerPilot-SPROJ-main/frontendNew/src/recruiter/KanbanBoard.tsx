@@ -13,7 +13,7 @@ interface Candidate {
 }
 
 interface KanbanBoardProps {
-  jobId: string | null;
+  jobId?: string | null;
 }
 
 export function KanbanBoard({ jobId }: KanbanBoardProps) {
